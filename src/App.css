@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+/* Ajuste del contenido principal para que no se superponga con el sidebar */
+.content {
+  margin-left: 250px;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Cuando el sidebar está cerrado */
+.sidebar.closed + .content {
+  margin-left: 0;
+}

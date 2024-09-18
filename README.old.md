@@ -1,2 +1,0 @@
-# VeterinariaWeb-Front
-VeterinariaWeb-Front
