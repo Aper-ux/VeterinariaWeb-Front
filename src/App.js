@@ -6,6 +6,7 @@ import Clientes from './pages/Clientes';
 import Mascotas from './pages/Mascotas';
 import Usuarios from './pages/Usuarios';
 import Roles from './pages/Roles';
+import TopBar from './components/TopBar';
 
 import './App.css'; // Asegúrate de que el archivo CSS esté correctamente referenciado
 
@@ -13,6 +14,7 @@ function App() {
     return (
         <Router>
             <div className="App">
+                <TopBar />
                 <Sidebar />
                 {/* Contenido principal de la aplicación */}
                 <div className="content">

@@ -14,7 +14,7 @@ const Sidebar = () => {
     return (
         <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
             <button className="toggle-button" onClick={() => setIsOpen(!isOpen)}>
-                {isOpen ? 'Cerrar' : 'Abrir'}
+                {isOpen ? '-' : '+'}
             </button>
             {isOpen && (
                 <div className="sidebar-content">

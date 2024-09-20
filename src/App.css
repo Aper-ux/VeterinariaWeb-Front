@@ -122,7 +122,7 @@
 
 .LogInContainer{
   padding: 3%;
-  background-color: #908C96;
+  background-color: #C792DF;
   border-radius: 10px;
   color: aliceblue;
   margin: 8%;
@@ -134,7 +134,7 @@
 }
 
 .InputContainer {
-  width: 225px;
+  width: 525px;
   height: 50px;
   display: flex;
   align-items: center;
@@ -147,7 +147,7 @@
 }
 
 .input {
-  width: 200px;
+  width: 500px;
   height: 40px;
   border: none;
   outline: none;

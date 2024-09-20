@@ -1,0 +1,9 @@
+.top-bar {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background-color: #C792DF;
+    color: aliceblue;
+    text-align: center;
+}
+  
