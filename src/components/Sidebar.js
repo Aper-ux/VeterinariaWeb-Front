@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import './Sidebar.css'; // Importamos el CSS para estilizar el sidebar
+import './Sidebar.css'; // Asegúrate de que el archivo CSS esté correctamente referenciado
 
 const Sidebar = () => {
     // Estado para controlar si el sidebar está desplegado o no
     const [isOpen, setIsOpen] = useState(true);
 
-    // Datos de usuario (cambiar esto para obtener los datos del usuario real)
+    // Datos de usuario (puedes cambiar esto para obtener los datos del usuario real)
     const user = {
         name: 'Juan Pérez',
         email: 'juan.perez@example.com'
@@ -23,14 +23,15 @@ const Sidebar = () => {
                         <h2>{user.name}</h2>
                         <p>{user.email}</p>
                     </div>
-                    
+
                     {/* Opciones de menú */}
                     <nav className="menu">
                         <ul>
-                            <li><a href="#citas">Citas</a></li>
-                            <li><a href="#historial">Historial</a></li>
-                            <li><a href="#inventario">Inventario</a></li>
-                            <li><a href="#servicios">Servicios</a></li>
+                            <li><a href="/">Inicio</a></li>
+                            <li><a href="/clientes">Clientes</a></li>
+                            <li><a href="/mascotas">Mascotas</a></li>
+                            <li><a href="/usuarios">Usuarios</a></li>
+                            <li><a href="/roles">Roles</a></li>
                         </ul>
                     </nav>
                 </div>
