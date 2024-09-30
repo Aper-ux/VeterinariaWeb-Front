@@ -40,7 +40,7 @@ const Usuarios = () => {
     return (
         <div className="usuarios-container">
             <h2>Usuarios</h2>
-            <button onClick={handleAdd}>Agregar Usuario</button>
+            <button onClick={handleAdd} class="button-56">Agregar Usuario</button>
             <table>
                 <thead>
                     <tr>
@@ -61,8 +61,8 @@ const Usuarios = () => {
                             <td>{usuario.rol}</td>
                             <td>{usuario.estado}</td>
                             <td>
-                                <button onClick={() => handleEdit(usuario)}>Editar</button>
-                                <button onClick={() => handleDelete(usuario.id)}>Eliminar</button>
+                                <button onClick={() => handleEdit(usuario)} class="button-61">Editar</button>
+                                <button onClick={() => handleDelete(usuario.id)} class="button-61">Eliminar</button>
                             </td>
                         </tr>
                     ))}

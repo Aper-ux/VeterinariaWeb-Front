@@ -40,7 +40,7 @@ const Roles = () => {
     return (
         <div className="roles-container">
             <h2>Roles</h2>
-            <button onClick={handleAdd}>Agregar Rol</button>
+            <button onClick={handleAdd} class="button-56">Agregar Rol</button>
             <table>
                 <thead>
                     <tr>
@@ -55,8 +55,8 @@ const Roles = () => {
                             <td>{rol.nombre}</td>
                             <td>{rol.permisos.join(', ')}</td>
                             <td>
-                                <button onClick={() => handleEdit(rol)}>Editar</button>
-                                <button onClick={() => handleDelete(rol.id)}>Eliminar</button>
+                                <button onClick={() => handleEdit(rol)} class="button-61">Editar</button>
+                                <button onClick={() => handleDelete(rol.id)} class="button-61">Eliminar</button>
                             </td>
                         </tr>
                     ))}

@@ -40,7 +40,7 @@ const Mascotas = () => {
     return (
         <div className="mascotas-container">
             <h2>Mascotas</h2>
-            <button onClick={handleAdd}>Agregar Mascota</button>
+            <button onClick={handleAdd} class="button-56">Agregar Mascota</button>
             <table>
                 <thead>
                     <tr>
@@ -63,8 +63,8 @@ const Mascotas = () => {
                             <td>{mascota.dueño}</td>
                             <td>{mascota.identificacion}</td>
                             <td>
-                                <button onClick={() => handleEdit(mascota)}>Editar</button>
-                                <button onClick={() => handleDelete(mascota.id)}>Eliminar</button>
+                                <button onClick={() => handleEdit(mascota)} class="button-61">Editar</button>
+                                <button onClick={() => handleDelete(mascota.id)} class="button-61">Eliminar</button>
                             </td>
                         </tr>
                     ))}

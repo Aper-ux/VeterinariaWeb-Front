@@ -44,7 +44,7 @@ const Clientes = () => {
     return (
         <div className="clientes-container">
             <h2>Clientes</h2>
-            <button onClick={handleAdd}>Agregar Cliente</button>
+            <button onClick={handleAdd} class="button-56">Agregar Cliente</button>
             <table>
                 <thead>
                     <tr>
@@ -65,8 +65,8 @@ const Clientes = () => {
                             <td>{cliente.telefono}</td>
                             <td>{cliente.rol}</td>
                             <td>
-                                <button onClick={() => handleEdit(cliente)}>Editar</button>
-                                <button onClick={() => handleDelete(cliente.id)}>Eliminar</button>
+                                <button onClick={() => handleEdit(cliente)} class="button-61">Editar</button>
+                                <button onClick={() => handleDelete(cliente.id)} class="button-61" >Eliminar</button>
                             </td>
                         </tr>
                     ))}
