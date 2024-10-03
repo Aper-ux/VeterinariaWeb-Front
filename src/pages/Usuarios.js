@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import UsuarioModal from '../components/UsuarioModal'; // Reutilizamos el mismo componente Modal
+import './TablasStyles.css';
 
 const Usuarios = () => {
     const [usuarios, setUsuarios] = useState([
@@ -10,6 +11,11 @@ const Usuarios = () => {
     const [selectedUsuario, setSelectedUsuario] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
+
+    // Filtros y búsqueda
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filterRol, setFilterRol] = useState('');
+    const [filterEstado, setFilterEstado] = useState('');
 
     const handleEdit = (usuario) => {
         setSelectedUsuario(usuario);
@@ -37,10 +43,47 @@ const Usuarios = () => {
         setIsAdding(false);
     };
 
+    // Manejo de filtros y búsqueda
+    const filteredUsuarios = usuarios
+        .filter(usuario => 
+            (filterRol === '' || usuario.rol === filterRol) &&
+            (filterEstado === '' || usuario.estado === filterEstado) &&
+            (usuario.nombre.toLowerCase().includes(searchTerm.toLowerCase()) || 
+             usuario.apellido.toLowerCase().includes(searchTerm.toLowerCase()) || 
+             usuario.email.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+
     return (
-        <div className="usuarios-container">
+        <div className="table-container">
             <h2>Usuarios</h2>
-            <button onClick={handleAdd}>Agregar Usuario</button>
+            
+            <div className="filter-container">
+                {/* Barra de búsqueda */}
+                <input 
+                    type="text" 
+                    placeholder="Buscar por nombre, apellido o email" 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)} 
+                    className="search-bar"
+                />
+                
+                {/* Filtro por Rol */}
+                <select value={filterRol} onChange={(e) => setFilterRol(e.target.value)} className="filter-select">
+                    <option value="">Filtrar por Rol</option>
+                    <option value="Veterinario">Veterinario</option>
+                    <option value="Cliente">Cliente</option>
+                </select>
+
+                {/* Filtro por Estado */}
+                <select value={filterEstado} onChange={(e) => setFilterEstado(e.target.value)} className="filter-select">
+                    <option value="">Filtrar por Estado</option>
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
+
+                <button className='button' onClick={handleAdd}>Agregar Usuario</button>
+            </div>
+
             <table>
                 <thead>
                     <tr>
@@ -53,16 +96,16 @@ const Usuarios = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {usuarios.map(usuario => (
+                    {filteredUsuarios.map(usuario => (
                         <tr key={usuario.id}>
                             <td>{usuario.nombre}</td>
                             <td>{usuario.apellido}</td>
                             <td>{usuario.email}</td>
                             <td>{usuario.rol}</td>
                             <td>{usuario.estado}</td>
-                            <td>
-                                <button onClick={() => handleEdit(usuario)}>Editar</button>
-                                <button onClick={() => handleDelete(usuario.id)}>Eliminar</button>
+                            <td className='table-actions'>
+                                <button className='button button-edit' onClick={() => handleEdit(usuario)}>Editar</button>
+                                <button className='button button-delete' onClick={() => handleDelete(usuario.id)}>Eliminar</button>
                             </td>
                         </tr>
                     ))}

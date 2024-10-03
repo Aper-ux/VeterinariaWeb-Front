@@ -29,18 +29,59 @@ const UsuarioModal = ({ usuario, onSave, onClose }) => {
             <div className="modal-content">
                 <h3>{usuario ? 'Editar Usuario' : 'Agregar Usuario'}</h3>
                 <label>Nombre:</label>
-                <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} />
+                <input
+                    type="text"
+                    name="nombre"
+                    value={formData.nombre}
+                    onChange={handleChange}
+                    placeholder="Nombre"
+                />
                 <label>Apellido:</label>
-                <input type="text" name="apellido" value={formData.apellido} onChange={handleChange} />
+                <input
+                    type="text"
+                    name="apellido"
+                    value={formData.apellido}
+                    onChange={handleChange}
+                    placeholder="Apellido"
+                />
                 <label>Email:</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} />
+                <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Email"
+                />
                 <label>Rol:</label>
-                <input type="text" name="rol" value={formData.rol} onChange={handleChange} />
+                <select
+                    name="rol"
+                    value={formData.rol}
+                    onChange={handleChange}
+                >
+                    <option value="">Seleccionar rol</option>
+                    <option value="Veterinario">Veterinario</option>
+                    <option value="Cliente">Cliente</option>
+                    <option value="Administrador">Administrador</option>
+                </select>
                 <label>Estado:</label>
-                <input type="text" name="estado" value={formData.estado} onChange={handleChange} />
+                <select
+                    name="estado"
+                    value={formData.estado}
+                    onChange={handleChange}
+                >
+                    <option value="">Seleccionar estado</option>
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
 
-                <button onClick={handleSubmit}>{usuario ? 'Guardar Cambios' : 'Agregar Usuario'}</button>
-                <button onClick={onClose}>Cancelar</button>
+                <div className="modal-buttons">
+                    <button onClick={handleSubmit}>
+                        {usuario ? 'Guardar Cambios' : 'Agregar Usuario'}
+                    </button>
+                    <button className="button-cancel" onClick={onClose}>
+                        Cancelar
+                    </button>
+                </div>
             </div>
         </div>
     );

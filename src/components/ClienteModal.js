@@ -39,8 +39,10 @@ const ClienteModal = ({ cliente, onSave, onClose }) => {
                 <label>Rol:</label>
                 <input type="text" name="rol" value={formData.rol} onChange={handleChange} />
 
-                <button onClick={handleSubmit}>{cliente ? 'Guardar Cambios' : 'Agregar Cliente'}</button>
-                <button onClick={onClose}>Cancelar</button>
+                <div className='modal-buttons'>
+                    <button onClick={handleSubmit}>{cliente ? 'Guardar Cambios' : 'Agregar Cliente'}</button>
+                    <button className='button-cancel' onClick={onClose}>Cancelar</button>
+                </div>
             </div>
         </div>
     );

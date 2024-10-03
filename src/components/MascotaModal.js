@@ -71,8 +71,10 @@ const MascotaModal = ({ mascota, onSave, onClose }) => {
                     onChange={handleChange}
                     required
                 />
-                <button onClick={handleSubmit}>{mascota ? 'Guardar Cambios' : 'Agregar Mascota'}</button>
-                <button onClick={onClose}>Cancelar</button>
+                <div className='modal-buttons'>
+                    <button onClick={handleSubmit}>{mascota ? 'Guardar Cambios' : 'Agregar Mascota'}</button>
+                    <button className='button-cancel' onClick={onClose}>Cancelar</button>
+                </div>
             </div>
         </div>
     );

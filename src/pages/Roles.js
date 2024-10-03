@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import RolModal from '../components/RolModal'; // Reutilizamos el mismo componente Modal
+import './TablasStyles.css'; // Importa los estilos
 
 const Roles = () => {
     const [roles, setRoles] = useState([
@@ -7,9 +8,12 @@ const Roles = () => {
         { id: 2, nombre: 'Veterinario', permisos: ['Consultar', 'Editar'] }
     ]);
 
+    const [filteredRoles, setFilteredRoles] = useState(roles);
     const [selectedRol, setSelectedRol] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filterPermisos, setFilterPermisos] = useState('');
 
     const handleEdit = (rol) => {
         setSelectedRol(rol);
@@ -23,24 +27,73 @@ const Roles = () => {
 
     const handleDelete = (rolId) => {
         if (window.confirm('¿Estás seguro de que deseas eliminar este rol?')) {
-            setRoles(roles.filter(rol => rol.id !== rolId));
+            const updatedRoles = roles.filter(rol => rol.id !== rolId);
+            setRoles(updatedRoles);
+            setFilteredRoles(updatedRoles); // Actualiza la lista filtrada
         }
     };
 
     const handleSave = (rol) => {
         if (isEditing) {
-            setRoles(roles.map(r => r.id === rol.id ? rol : r));
+            const updatedRoles = roles.map(r => r.id === rol.id ? rol : r);
+            setRoles(updatedRoles);
+            setFilteredRoles(updatedRoles); // Actualiza la lista filtrada
         } else if (isAdding) {
-            setRoles([...roles, { ...rol, id: roles.length + 1 }]);
+            const newRoles = [...roles, { ...rol, id: roles.length + 1 }];
+            setRoles(newRoles);
+            setFilteredRoles(newRoles); // Actualiza la lista filtrada
         }
         setIsEditing(false);
         setIsAdding(false);
     };
 
+    // Función para manejar la búsqueda y filtrado
+    const handleSearch = (e) => {
+        const query = e.target.value.toLowerCase();
+        setSearchQuery(query);
+        filterRoles(query, filterPermisos);
+    };
+
+    const handleFilterPermisos = (e) => {
+        const permiso = e.target.value;
+        setFilterPermisos(permiso);
+        filterRoles(searchQuery, permiso);
+    };
+
+    const filterRoles = (searchQuery, filterPermisos) => {
+        const filtered = roles.filter(rol => {
+            const matchesQuery = rol.nombre.toLowerCase().includes(searchQuery);
+            const matchesPermisos = filterPermisos ? rol.permisos.includes(filterPermisos) : true;
+            return matchesQuery && matchesPermisos;
+        });
+        setFilteredRoles(filtered);
+    };
+
     return (
-        <div className="roles-container">
+        <div className="table-container">
             <h2>Roles</h2>
-            <button onClick={handleAdd}>Agregar Rol</button>
+
+            {/* Barra de búsqueda y filtro */}
+            <div className="filter-container">
+                <input
+                    type="text"
+                    className="search-bar"
+                    placeholder="Buscar por nombre de rol..."
+                    value={searchQuery}
+                    onChange={handleSearch}
+                />
+
+                <select className="filter-select" value={filterPermisos} onChange={handleFilterPermisos}>
+                    <option value="">Filtrar por permiso</option>
+                    <option value="Crear">Crear</option>
+                    <option value="Editar">Editar</option>
+                    <option value="Eliminar">Eliminar</option>
+                    <option value="Consultar">Consultar</option>
+                </select>
+
+                <button className="button" onClick={handleAdd}>Agregar Rol</button>
+            </div>
+
             <table>
                 <thead>
                     <tr>
@@ -50,13 +103,13 @@ const Roles = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {roles.map(rol => (
+                    {filteredRoles.map(rol => (
                         <tr key={rol.id}>
                             <td>{rol.nombre}</td>
                             <td>{rol.permisos.join(', ')}</td>
                             <td>
-                                <button onClick={() => handleEdit(rol)}>Editar</button>
-                                <button onClick={() => handleDelete(rol.id)}>Eliminar</button>
+                                <button className='button button-edit' onClick={() => handleEdit(rol)}>Editar</button>
+                                <button className='button button-delete' onClick={() => handleDelete(rol.id)}>Eliminar</button>
                             </td>
                         </tr>
                     ))}
