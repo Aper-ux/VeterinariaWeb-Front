@@ -5,7 +5,7 @@ const Sidebar = () => {
     // Estado para controlar si el sidebar está desplegado o no
     const [isOpen, setIsOpen] = useState(true);
 
-    // Datos de usuario (puedes cambiar esto para obtener los datos del usuario real)
+    // Datos de usuario (cambiar esto para obtener los datos del usuario real)
     const user = {
         name: 'Juan Pérez',
         email: 'juan.perez@example.com'
@@ -20,18 +20,21 @@ const Sidebar = () => {
                 <div className="sidebar-content">
                     {/* Información del usuario */}
                     <div className="user-info">
-                        <h2>{user.name}</h2>
-                        <p>{user.email}</p>
+                        <img src="https://cdn-icons-png.flaticon.com/512/6522/6522516.png " className='user-profilepic' alt={user.name} />
+                        <div className="user-info-text">
+                            <h2>{user.name}</h2>
+                            <p>{user.email}</p>
+                        </div>
                     </div>
 
                     {/* Opciones de menú */}
                     <nav className="menu">
                         <ul>
-                            <li><a href="/">Inicio</a></li>
-                            <li><a href="/clientes">Clientes</a></li>
-                            <li><a href="/mascotas">Mascotas</a></li>
-                            <li><a href="/usuarios">Usuarios</a></li>
-                            <li><a href="/roles">Roles</a></li>
+                            <a href="/"><li>Inicio</li></a>
+                            <a href="/clientes"><li>Clientes</li></a>
+                            <a href="/mascotas"><li>Mascotas</li></a>
+                            <a href="/usuarios"><li>Usuarios</li></a>
+                            <a href="/roles"><li>Roles</li></a>
                         </ul>
                     </nav>
                 </div>
