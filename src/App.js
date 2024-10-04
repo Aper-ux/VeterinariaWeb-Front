@@ -8,7 +8,7 @@ import Mascotas from './pages/Mascotas';
 import Usuarios from './pages/Usuarios';
 import Roles from './pages/Roles';
 import RegistroUsuarios from './pages/RegistroUsuarios';
-
+import Perfil from './pages/Perfil';
 import './App.css'; // Asegúrate de que el archivo CSS esté correctamente referenciado
 
 function App() {
@@ -22,6 +22,7 @@ function App() {
                     <Switch>
                         <Route path="/login" component={LogIn} />
                         <Route path="/registro-usuarios" component={RegistroUsuarios} />
+                        <Route path="/perfil" component={Perfil} />
                         <Route path="/clientes" component={Clientes} />
                         <Route path="/mascotas" component={Mascotas} />
                         <Route path="/usuarios" component={Usuarios} />

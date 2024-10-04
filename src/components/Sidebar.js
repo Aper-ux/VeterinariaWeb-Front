@@ -31,6 +31,8 @@ const Sidebar = () => {
                     <nav className="menu">
                         <ul>
                             <a href="/"><li>Inicio</li></a>
+                            <a href="/perfil"><li>Mi Perfil</li></a>
+                            <a href="/perfil"><li>Inventario</li></a>
                             <a href="/clientes"><li>Clientes</li></a>
                             <a href="/mascotas"><li>Mascotas</li></a>
                             <a href="/usuarios"><li>Usuarios</li></a>
