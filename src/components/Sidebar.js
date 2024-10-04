@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
-import './Sidebar.css'; // Asegúrate de que el archivo CSS esté correctamente referenciado
+import { useHistory } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import './Sidebar.css';
 
 const Sidebar = () => {
-    // Estado para controlar si el sidebar está desplegado o no
     const [isOpen, setIsOpen] = useState(true);
+    const { user, logout } = useAuth();
+    const history = useHistory();
 
-    // Datos de usuario (puedes cambiar esto para obtener los datos del usuario real)
-    const user = {
-        name: 'Juan Pérez',
-        email: 'juan.perez@example.com'
+    const hasRole = (roles) => {
+        return user && roles.some(role => user.roles.includes(role));
+    };
+
+    const handleNavigation = (path) => {
+        history.push(path);
+        window.location.reload(); // Force page reload
+    };
+
+    const handleLogout = () => {
+        logout();
+        history.push('/login');
+        window.location.reload(); // Force page reload
     };
 
     return (
@@ -18,20 +30,37 @@ const Sidebar = () => {
             </button>
             {isOpen && (
                 <div className="sidebar-content">
-                    {/* Información del usuario */}
                     <div className="user-info">
-                        <h2>{user.name}</h2>
-                        <p>{user.email}</p>
+                        <h2>{user ? `${user.nombre} ${user.apellido}` : 'Invitado'}</h2>
+                        <p>{user ? user.email : ''}</p>
                     </div>
-
-                    {/* Opciones de menú */}
                     <nav className="menu">
                         <ul>
-                            <li><a href="/">Inicio</a></li>
-                            <li><a href="/clientes">Clientes</a></li>
-                            <li><a href="/mascotas">Mascotas</a></li>
-                            <li><a href="/usuarios">Usuarios</a></li>
-                            <li><a href="/roles">Roles</a></li>
+                            {user ? (
+                                <>
+                                    <li><button onClick={() => handleNavigation('/perfil')}>Mi Perfil</button></li>
+                                    <li><button onClick={() => handleNavigation('/mascotas')}>Mis Mascotas</button></li>
+                                    {hasRole(['VETERINARIO', 'RECEPCIONISTA']) && (
+                                        <>
+                                            <li><button onClick={() => handleNavigation('/clientes')}>Clientes</button></li>
+                                            <li><button onClick={() => handleNavigation('/vetmascotas')}>Todas las Mascotas</button></li>
+                                        </>
+                                    )}
+                                    {hasRole(['VETERINARIO']) && (
+                                        <>
+                                            <li><button onClick={() => handleNavigation('/usuarios')}>Usuarios</button></li>
+                                            <li><button onClick={() => handleNavigation('/roles')}>Roles</button></li>
+                                            <li><button onClick={() => handleNavigation('/admin-register')}>Registrar Usuario</button></li>
+                                        </>
+                                    )}
+                                    <li><button onClick={handleLogout} className="logout-button">Cerrar Sesión</button></li>
+                                </>
+                            ) : (
+                                <>
+                                    <li><button onClick={() => handleNavigation('/login')}>Iniciar Sesión</button></li>
+                                    <li><button onClick={() => handleNavigation('/register')}>Registrarse</button></li>
+                                </>
+                            )}
                         </ul>
                     </nav>
                 </div>

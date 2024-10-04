@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UsuarioModal from '../components/UsuarioModal'; // Reutilizamos el mismo componente Modal
+import { getUsersApi, createUserApi, updateUserApi, deleteUserApi, toggleUserStatusApi } from '../services/api';
+
 
 const Usuarios = () => {
-    const [usuarios, setUsuarios] = useState([
-        { id: 1, nombre: 'Carlos', apellido: 'Sánchez', email: 'carlos.sanchez@example.com', rol: 'Veterinario', estado: 'Activo' },
-        { id: 2, nombre: 'Ana', apellido: 'Ríos', email: 'ana.rios@example.com', rol: 'Cliente', estado: 'Inactivo' }
-    ]);
-
+    const [usuarios, setUsuarios] = useState([]);
     const [selectedUsuario, setSelectedUsuario] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
+    const [filterActive, setFilterActive] = useState(null);
+    const [filterRole, setFilterRole] = useState('');
+
+    useEffect(() => {
+        fetchUsuarios();
+    }, [filterActive, filterRole]);
+
+    const fetchUsuarios = async () => {
+        try {
+            const response = await getUsersApi(filterActive, filterRole);
+            setUsuarios(response.data);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
 
     const handleEdit = (usuario) => {
         setSelectedUsuario(usuario);
@@ -21,26 +34,58 @@ const Usuarios = () => {
         setIsAdding(true);
     };
 
-    const handleDelete = (usuarioId) => {
-        if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-            setUsuarios(usuarios.filter(usuario => usuario.id !== usuarioId));
+    const handleDelete = async (usuarioId) => {
+        if (window.confirm('¿Estás seguro de que deseas eliminar este usuario? Esta acción es irreversible.')) {
+            try {
+                await deleteUserApi(usuarioId);
+                fetchUsuarios();
+            } catch (error) {
+                console.error('Error deleting user:', error);
+            }
         }
     };
 
-    const handleSave = (usuario) => {
-        if (isEditing) {
-            setUsuarios(usuarios.map(u => u.id === usuario.id ? usuario : u));
-        } else if (isAdding) {
-            setUsuarios([...usuarios, { ...usuario, id: usuarios.length + 1 }]);
+    const handleToggleStatus = async (usuarioId, isActive) => {
+        try {
+            await toggleUserStatusApi(usuarioId, !isActive);
+            fetchUsuarios();
+        } catch (error) {
+            console.error('Error toggling user status:', error);
         }
-        setIsEditing(false);
-        setIsAdding(false);
+    };
+
+    const handleSave = async (usuario) => {
+        try {
+            if (isEditing) {
+                await updateUserApi(usuario.id, usuario);
+            } else if (isAdding) {
+                await createUserApi(usuario);
+            }
+            fetchUsuarios();
+            setIsEditing(false);
+            setIsAdding(false);
+        } catch (error) {
+            console.error('Error saving user:', error);
+        }
     };
 
     return (
         <div className="usuarios-container">
             <h2>Usuarios</h2>
-            <button onClick={handleAdd} class="button-56">Agregar Usuario</button>
+            <div className="filters">
+                <select onChange={(e) => setFilterActive(e.target.value)} value={filterActive || ''}>
+                    <option value="">Todos</option>
+                    <option value="true">Activos</option>
+                    <option value="false">Inactivos</option>
+                </select>
+                <select onChange={(e) => setFilterRole(e.target.value)} value={filterRole}>
+                    <option value="">Todos los roles</option>
+                    <option value="VETERINARIO">Veterinario</option>
+                    <option value="CLIENTE">Cliente</option>
+                    <option value="RECEPCIONISTA">Recepcionista</option>
+                </select>
+            </div>
+            <button onClick={handleAdd} className="button-56">Agregar Usuario</button>
             <table>
                 <thead>
                     <tr>
@@ -58,25 +103,27 @@ const Usuarios = () => {
                             <td>{usuario.nombre}</td>
                             <td>{usuario.apellido}</td>
                             <td>{usuario.email}</td>
-                            <td>{usuario.rol}</td>
-                            <td>{usuario.estado}</td>
+                            <td>{usuario.roles.join(', ')}</td>
+                            <td>{usuario.active ? 'Activo' : 'Inactivo'}</td>
                             <td>
-                                <button onClick={() => handleEdit(usuario)} class="button-61">Editar</button>
-                                <button onClick={() => handleDelete(usuario.id)} class="button-61">Eliminar</button>
+                                <button onClick={() => handleEdit(usuario)} className="button-61">Editar</button>
+                                <button onClick={() => handleDelete(usuario.id)} className="button-61">Eliminar</button>
+                                <button onClick={() => handleToggleStatus(usuario.id, usuario.active)} className="button-61">
+                                    {usuario.active ? 'Desactivar' : 'Activar'}
+                                </button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            {/* Modal para agregar o editar usuario */}
-            {isEditing || isAdding ? (
+            {(isEditing || isAdding) && (
                 <UsuarioModal
                     usuario={selectedUsuario}
                     onSave={handleSave}
                     onClose={() => { setIsEditing(false); setIsAdding(false); }}
                 />
-            ) : null}
+            )}
         </div>
     );
 };
