@@ -11,10 +11,12 @@ import Register from './pages/Register';
 import AdminRegister from './pages/AdminRegister';
 import Clientes from './pages/Clientes';
 import Mascotas from './pages/Mascotas';
-import Usuarios from './pages/Usuarios';
-import Roles from './pages/Roles';
+import InventoryPage from './pages/InventoryPage';
+
+import Roles from './components/Roles';
 import PerfilCliente from './pages/PerfilCliente';
 import MascotasVet from './pages/MascotasVet';
+import UserList from './components/UserList'
 import './App.css'
 
 function AppContent() {
@@ -39,9 +41,10 @@ function AppContent() {
                         </Route>
                         <PrivateRoute path="/admin-register" component={AdminRegister} roles={['VETERINARIO']} />
                         <PrivateRoute path="/clientes" component={Clientes} roles={['VETERINARIO', 'RECEPCIONISTA']} />
+                        <PrivateRoute path="/inventory" component={InventoryPage} roles={['VETERINARIO', 'RECEPCIONISTA']} />
                         <PrivateRoute path="/mascotas" component={Mascotas} />
                         <PrivateRoute path="/vetmascotas" component={MascotasVet} roles={['VETERINARIO']} />
-                        <PrivateRoute path="/usuarios" component={Usuarios} roles={['VETERINARIO']} />
+                        <PrivateRoute path="/usuarios" component={UserList} roles={['VETERINARIO']} />
                         <PrivateRoute path="/roles" component={Roles} roles={['VETERINARIO']} />
                         <PrivateRoute path="/perfil" component={PerfilCliente} />
                         <Route exact path="/">

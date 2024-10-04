@@ -42,15 +42,16 @@ const Sidebar = () => {
                                     <li><button onClick={() => handleNavigation('/mascotas')}>Mis Mascotas</button></li>
                                     {hasRole(['VETERINARIO', 'RECEPCIONISTA']) && (
                                         <>
-                                            <li><button onClick={() => handleNavigation('/clientes')}>Clientes</button></li>
+                                            
                                             <li><button onClick={() => handleNavigation('/vetmascotas')}>Todas las Mascotas</button></li>
+                                            <li><button onClick={() => handleNavigation('/inventory')}>Inventario</button></li>
                                         </>
                                     )}
                                     {hasRole(['VETERINARIO']) && (
                                         <>
                                             <li><button onClick={() => handleNavigation('/usuarios')}>Usuarios</button></li>
                                             <li><button onClick={() => handleNavigation('/roles')}>Roles</button></li>
-                                            <li><button onClick={() => handleNavigation('/admin-register')}>Registrar Usuario</button></li>
+                                            
                                         </>
                                     )}
                                     <li><button onClick={handleLogout} className="logout-button">Cerrar Sesión</button></li>
