@@ -14,7 +14,17 @@ const Sidebar = () => {
     return (
         <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
             <button className="toggle-button" onClick={() => setIsOpen(!isOpen)}>
-                {isOpen ? 'Cerrar' : 'Abrir'}
+                {/* menu icon, closed and open white*/}
+                {isOpen ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="aliceblue">
+                        <path d="M12 5v14l10-7z" />
+                    </svg>
+                ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="aliceblue">
+                        <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" />
+                    </svg>
+                )}
+                
             </button>
             {isOpen && (
                 <div className="sidebar-content">
