@@ -18,6 +18,7 @@ const LogIn = () => {
                 <input class="search-bar" type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                 <h2 htmlFor="password">Contraseña:</h2>
                 <input class="search-bar" type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <h4>_</h4>
                 <button class="button" type="submit">Ingresar</button>
             </form>
         </div>
