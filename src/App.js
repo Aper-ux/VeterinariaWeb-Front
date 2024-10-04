@@ -1,6 +1,8 @@
 import React from 'react';
 import Sidebar from './components/Sidebar';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import LogIn from './pages/LogIn';
+import TopBar from './components/TopBar';
 import Clientes from './pages/Clientes';
 import Mascotas from './pages/Mascotas';
 import Usuarios from './pages/Usuarios';
@@ -11,10 +13,12 @@ function App() {
     return (
         <Router>
             <div className="App">
+                <TopBar />
                 <Sidebar />
                 {/* Contenido principal de la aplicación */}
                 <div className="content">
                     <Switch>
+                        <Route path="/login" component={LogIn} />
                         <Route path="/clientes" component={Clientes} />
                         <Route path="/mascotas" component={Mascotas} />
                         <Route path="/usuarios" component={Usuarios} />
@@ -22,6 +26,10 @@ function App() {
                         <Route path="/" exact>
                             <h1>Bienvenido a la Veterinaria</h1>
                             <p>Selecciona una opción en el menú para comenzar.</p>
+                            <div class="container">
+                                <a href="/login" className="button">Iniciar Sesión</a>
+                                <a href="/login" className="button">Registrarse</a>
+                            </div>
                         </Route>
                     </Switch>
                 </div>
