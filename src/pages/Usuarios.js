@@ -1,21 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UsuarioModal from '../components/UsuarioModal'; // Reutilizamos el mismo componente Modal
-import './TablasStyles.css';
+import { getUsersApi, createUserApi, updateUserApi, deleteUserApi, toggleUserStatusApi } from '../services/api';
+
 
 const Usuarios = () => {
-    const [usuarios, setUsuarios] = useState([
-        { id: 1, nombre: 'Carlos', apellido: 'Sánchez', email: 'carlos.sanchez@example.com', rol: 'Veterinario', estado: 'Activo' },
-        { id: 2, nombre: 'Ana', apellido: 'Ríos', email: 'ana.rios@example.com', rol: 'Cliente', estado: 'Inactivo' }
-    ]);
-
+    const [usuarios, setUsuarios] = useState([]);
     const [selectedUsuario, setSelectedUsuario] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
+    const [filterActive, setFilterActive] = useState(null);
+    const [filterRole, setFilterRole] = useState('');
 
-    // Filtros y búsqueda
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filterRol, setFilterRol] = useState('');
-    const [filterEstado, setFilterEstado] = useState('');
+    useEffect(() => {
+        fetchUsuarios();
+    }, [filterActive, filterRole]);
+
+    const fetchUsuarios = async () => {
+        try {
+            const response = await getUsersApi(filterActive, filterRole);
+            setUsuarios(response.data);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
 
     const handleEdit = (usuario) => {
         setSelectedUsuario(usuario);
@@ -27,63 +34,58 @@ const Usuarios = () => {
         setIsAdding(true);
     };
 
-    const handleDelete = (usuarioId) => {
-        if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-            setUsuarios(usuarios.filter(usuario => usuario.id !== usuarioId));
+    const handleDelete = async (usuarioId) => {
+        if (window.confirm('¿Estás seguro de que deseas eliminar este usuario? Esta acción es irreversible.')) {
+            try {
+                await deleteUserApi(usuarioId);
+                fetchUsuarios();
+            } catch (error) {
+                console.error('Error deleting user:', error);
+            }
         }
     };
 
-    const handleSave = (usuario) => {
-        if (isEditing) {
-            setUsuarios(usuarios.map(u => u.id === usuario.id ? usuario : u));
-        } else if (isAdding) {
-            setUsuarios([...usuarios, { ...usuario, id: usuarios.length + 1 }]);
+    const handleToggleStatus = async (usuarioId, isActive) => {
+        try {
+            await toggleUserStatusApi(usuarioId, !isActive);
+            fetchUsuarios();
+        } catch (error) {
+            console.error('Error toggling user status:', error);
         }
-        setIsEditing(false);
-        setIsAdding(false);
     };
 
-    // Manejo de filtros y búsqueda
-    const filteredUsuarios = usuarios
-        .filter(usuario => 
-            (filterRol === '' || usuario.rol === filterRol) &&
-            (filterEstado === '' || usuario.estado === filterEstado) &&
-            (usuario.nombre.toLowerCase().includes(searchTerm.toLowerCase()) || 
-             usuario.apellido.toLowerCase().includes(searchTerm.toLowerCase()) || 
-             usuario.email.toLowerCase().includes(searchTerm.toLowerCase()))
-        );
+    const handleSave = async (usuario) => {
+        try {
+            if (isEditing) {
+                await updateUserApi(usuario.id, usuario);
+            } else if (isAdding) {
+                await createUserApi(usuario);
+            }
+            fetchUsuarios();
+            setIsEditing(false);
+            setIsAdding(false);
+        } catch (error) {
+            console.error('Error saving user:', error);
+        }
+    };
 
     return (
-        <div className="table-container">
+        <div className="usuarios-container">
             <h2>Usuarios</h2>
-            
-            <div className="filter-container">
-                {/* Barra de búsqueda */}
-                <input 
-                    type="text" 
-                    placeholder="Buscar por nombre, apellido o email" 
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)} 
-                    className="search-bar"
-                />
-                
-                {/* Filtro por Rol */}
-                <select value={filterRol} onChange={(e) => setFilterRol(e.target.value)} className="filter-select">
-                    <option value="">Filtrar por Rol</option>
-                    <option value="Veterinario">Veterinario</option>
-                    <option value="Cliente">Cliente</option>
+            <div className="filters">
+                <select onChange={(e) => setFilterActive(e.target.value)} value={filterActive || ''}>
+                    <option value="">Todos</option>
+                    <option value="true">Activos</option>
+                    <option value="false">Inactivos</option>
                 </select>
-
-                {/* Filtro por Estado */}
-                <select value={filterEstado} onChange={(e) => setFilterEstado(e.target.value)} className="filter-select">
-                    <option value="">Filtrar por Estado</option>
-                    <option value="Activo">Activo</option>
-                    <option value="Inactivo">Inactivo</option>
+                <select onChange={(e) => setFilterRole(e.target.value)} value={filterRole}>
+                    <option value="">Todos los roles</option>
+                    <option value="VETERINARIO">Veterinario</option>
+                    <option value="CLIENTE">Cliente</option>
+                    <option value="RECEPCIONISTA">Recepcionista</option>
                 </select>
-
-                <button className='button' onClick={handleAdd}>Agregar Usuario</button>
             </div>
-
+            <button onClick={handleAdd} className="button-56">Agregar Usuario</button>
             <table>
                 <thead>
                     <tr>
@@ -96,30 +98,32 @@ const Usuarios = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredUsuarios.map(usuario => (
+                    {usuarios.map(usuario => (
                         <tr key={usuario.id}>
                             <td>{usuario.nombre}</td>
                             <td>{usuario.apellido}</td>
                             <td>{usuario.email}</td>
-                            <td>{usuario.rol}</td>
-                            <td>{usuario.estado}</td>
-                            <td className='table-actions'>
-                                <button className='button button-edit' onClick={() => handleEdit(usuario)}>Editar</button>
-                                <button className='button button-delete' onClick={() => handleDelete(usuario.id)}>Eliminar</button>
+                            <td>{usuario.roles.join(', ')}</td>
+                            <td>{usuario.active ? 'Activo' : 'Inactivo'}</td>
+                            <td>
+                                <button onClick={() => handleEdit(usuario)} className="button-61">Editar</button>
+                                <button onClick={() => handleDelete(usuario.id)} className="button-61">Eliminar</button>
+                                <button onClick={() => handleToggleStatus(usuario.id, usuario.active)} className="button-61">
+                                    {usuario.active ? 'Desactivar' : 'Activar'}
+                                </button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            {/* Modal para agregar o editar usuario */}
-            {isEditing || isAdding ? (
+            {(isEditing || isAdding) && (
                 <UsuarioModal
                     usuario={selectedUsuario}
                     onSave={handleSave}
                     onClose={() => { setIsEditing(false); setIsAdding(false); }}
                 />
-            ) : null}
+            )}
         </div>
     );
 };

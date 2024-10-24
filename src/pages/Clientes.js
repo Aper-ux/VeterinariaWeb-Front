@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import ClienteModal from '../components/ClienteModal'; // Componente Modal reutilizable
-import './TablasStyles.css';
 
 const Clientes = () => {
     const [clientes, setClientes] = useState([
@@ -8,13 +7,10 @@ const Clientes = () => {
         { id: 2, nombre: 'María', apellido: 'Gómez', direccion: 'Calle Falsa 123', telefono: '987654321', rol: 'Cliente' }
     ]);
 
-    const [filteredClientes, setFilteredClientes] = useState(clientes);
     const [selectedCliente, setSelectedCliente] = useState(null); // Para el cliente que se va a editar
     const [isEditing, setIsEditing] = useState(false); // Controla si estamos en modo edición
     const [isAdding, setIsAdding] = useState(false); // Controla si estamos en modo agregar
-    const [searchQuery, setSearchQuery] = useState('');
-    const [filterRol, setFilterRol] = useState('');
-    
+
     // Función para abrir el modal de editar
     const handleEdit = (cliente) => {
         setSelectedCliente(cliente);
@@ -31,70 +27,24 @@ const Clientes = () => {
     const handleDelete = (clienteId) => {
         if (window.confirm('¿Estás seguro de que deseas eliminar este cliente?')) {
             setClientes(clientes.filter(cliente => cliente.id !== clienteId));
-            setFilteredClientes(clientes.filter(cliente => cliente.id !== clienteId)); // Actualiza la lista filtrada
         }
     };
 
     // Función para guardar o actualizar cliente
     const handleSave = (cliente) => {
         if (isEditing) {
-            const updatedClientes = clientes.map(c => c.id === cliente.id ? cliente : c);
-            setClientes(updatedClientes);
-            setFilteredClientes(updatedClientes); // Actualiza la lista filtrada
+            setClientes(clientes.map(c => c.id === cliente.id ? cliente : c));
         } else if (isAdding) {
-            const newClientes = [...clientes, { ...cliente, id: clientes.length + 1 }];
-            setClientes(newClientes);
-            setFilteredClientes(newClientes); // Actualiza la lista filtrada
+            setClientes([...clientes, { ...cliente, id: clientes.length + 1 }]);
         }
         setIsEditing(false);
         setIsAdding(false);
     };
 
-    // Filtrar por búsqueda y rol
-    const handleSearch = (e) => {
-        const query = e.target.value.toLowerCase();
-        setSearchQuery(query);
-        filterClientes(query, filterRol);
-    };
-
-    const handleFilterRol = (e) => {
-        const rol = e.target.value;
-        setFilterRol(rol);
-        filterClientes(searchQuery, rol);
-    };
-
-    const filterClientes = (searchQuery, filterRol) => {
-        const filtered = clientes.filter(cliente => {
-            const matchesQuery = cliente.nombre.toLowerCase().includes(searchQuery) || 
-                                 cliente.apellido.toLowerCase().includes(searchQuery);
-            const matchesRol = filterRol ? cliente.rol === filterRol : true;
-            return matchesQuery && matchesRol;
-        });
-        setFilteredClientes(filtered);
-    };
-
     return (
-        <div className="table-container">
+        <div className="clientes-container">
             <h2>Clientes</h2>
-
-            <div className="filter-container">
-                <input 
-                    type="text"
-                    className="search-bar"
-                    placeholder="Buscar por nombre o apellido..."
-                    value={searchQuery}
-                    onChange={handleSearch}
-                />
-
-                <select className="filter-select" value={filterRol} onChange={handleFilterRol}>
-                    <option value="">Filtrar por rol</option>
-                    <option value="Cliente">Cliente</option>
-                    <option value="Veterinario">Veterinario</option>
-                </select>
-
-                <button className="button" onClick={handleAdd}>Agregar Cliente</button>
-            </div>
-
+            <button onClick={handleAdd} class="button-56">Agregar Cliente</button>
             <table>
                 <thead>
                     <tr>
@@ -107,7 +57,7 @@ const Clientes = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredClientes.map(cliente => (
+                    {clientes.map(cliente => (
                         <tr key={cliente.id}>
                             <td>{cliente.nombre}</td>
                             <td>{cliente.apellido}</td>
@@ -115,8 +65,8 @@ const Clientes = () => {
                             <td>{cliente.telefono}</td>
                             <td>{cliente.rol}</td>
                             <td>
-                                <button className='button button-edit' onClick={() => handleEdit(cliente)}>Editar</button>
-                                <button className='button button-delete' onClick={() => handleDelete(cliente.id)}>Eliminar</button>
+                                <button onClick={() => handleEdit(cliente)} class="button-61">Editar</button>
+                                <button onClick={() => handleDelete(cliente.id)} class="button-61" >Eliminar</button>
                             </td>
                         </tr>
                     ))}

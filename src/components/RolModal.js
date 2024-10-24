@@ -30,11 +30,8 @@ const RolModal = ({ rol, onSave, onClose }) => {
                 <label>Permisos (separados por comas):</label>
                 <input type="text" name="permisos" value={formData.permisos} onChange={handleChange} />
 
-                <div className='modal-buttons'>
-                    <button onClick={handleSubmit}>{rol ? 'Guardar Cambios' : 'Agregar Rol'}</button>
-                    <button onClick={onClose}>Cancelar</button>
-                </div>
-                    
+                <button onClick={handleSubmit}>{rol ? 'Guardar Cambios' : 'Agregar Rol'}</button>
+                <button onClick={onClose}>Cancelar</button>
             </div>
         </div>
     );

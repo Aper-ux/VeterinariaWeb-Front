@@ -1,52 +1,67 @@
 import React, { useState } from 'react';
-import './Sidebar.css'; // Asegúrate de que el archivo CSS esté correctamente referenciado
+import { useHistory } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import './Sidebar.css';
 
 const Sidebar = () => {
-    // Estado para controlar si el sidebar está desplegado o no
     const [isOpen, setIsOpen] = useState(true);
+    const { user, logout } = useAuth();
+    const history = useHistory();
 
-    // Datos de usuario (cambiar esto para obtener los datos del usuario real)
-    const user = {
-        name: 'Juan Pérez',
-        email: 'juan.perez@example.com'
+    const hasRole = (roles) => {
+        return user && roles.some(role => user.roles.includes(role));
+    };
+
+    const handleNavigation = (path) => {
+        history.push(path);
+        window.location.reload(); // Force page reload
+    };
+
+    const handleLogout = () => {
+        logout();
+        history.push('/login');
+        window.location.reload(); // Force page reload
     };
 
     return (
         <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
             <button className="toggle-button" onClick={() => setIsOpen(!isOpen)}>
-                {/* menu icon, closed and open white*/}
-                {isOpen ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="aliceblue">
-                        <path d="M12 5v14l10-7z" />
-                    </svg>
-                ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="aliceblue">
-                        <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" />
-                    </svg>
-                )}
-                
+                {isOpen ? '-' : '+'}
             </button>
             {isOpen && (
                 <div className="sidebar-content">
-                    {/* Información del usuario */}
                     <div className="user-info">
-                        <img src="https://cdn-icons-png.flaticon.com/512/6522/6522516.png " className='user-profilepic' alt={user.name} />
-                        <div className="user-info-text">
-                            <h2>{user.name}</h2>
-                            <p>{user.email}</p>
-                        </div>
+                        <h2>{user ? `${user.nombre} ${user.apellido}` : 'Invitado'}</h2>
+                        <p>{user ? user.email : ''}</p>
                     </div>
-
-                    {/* Opciones de menú */}
                     <nav className="menu">
                         <ul>
-                            <a href="/"><li>Inicio</li></a>
-                            <a href="/perfil"><li>Mi Perfil</li></a>
-                            <a href="/inventario"><li>Inventario</li></a>
-                            <a href="/clientes"><li>Clientes</li></a>
-                            <a href="/mascotas"><li>Mascotas</li></a>
-                            <a href="/usuarios"><li>Usuarios</li></a>
-                            <a href="/roles"><li>Roles</li></a>
+                            {user ? (
+                                <>
+                                    <li><button onClick={() => handleNavigation('/perfil')}>Mi Perfil</button></li>
+                                    <li><button onClick={() => handleNavigation('/mascotas')}>Mis Mascotas</button></li>
+                                    {hasRole(['VETERINARIO', 'RECEPCIONISTA']) && (
+                                        <>
+                                            
+                                            <li><button onClick={() => handleNavigation('/vetmascotas')}>Todas las Mascotas</button></li>
+                                            <li><button onClick={() => handleNavigation('/inventory')}>Inventario</button></li>
+                                        </>
+                                    )}
+                                    {hasRole(['VETERINARIO']) && (
+                                        <>
+                                            <li><button onClick={() => handleNavigation('/usuarios')}>Usuarios</button></li>
+                                            <li><button onClick={() => handleNavigation('/roles')}>Roles</button></li>
+                                            
+                                        </>
+                                    )}
+                                    <li><button onClick={handleLogout} className="logout-button">Cerrar Sesión</button></li>
+                                </>
+                            ) : (
+                                <>
+                                    <li><button onClick={() => handleNavigation('/login')}>Iniciar Sesión</button></li>
+                                    <li><button onClick={() => handleNavigation('/register')}>Registrarse</button></li>
+                                </>
+                            )}
                         </ul>
                     </nav>
                 </div>

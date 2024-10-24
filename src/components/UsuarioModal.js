@@ -5,23 +5,55 @@ const UsuarioModal = ({ usuario, onSave, onClose }) => {
         nombre: '',
         apellido: '',
         email: '',
-        rol: '',
-        estado: ''
+        roles: [],
+        password: '' // Solo para nuevos usuarios
     });
+    const [emailError, setEmailError] = useState('');
 
     useEffect(() => {
         if (usuario) {
-            setFormData(usuario); // Cargar datos del usuario si está en modo edición
+            setFormData({
+                ...usuario,
+                password: '' // No incluimos la contraseña al editar
+            });
         }
     }, [usuario]);
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        if (name === 'email') {
+            validateEmail(value);
+        }
+    };
+
+    const handleRoleChange = (e) => {
+        const { value, checked } = e.target;
+        let updatedRoles;
+        if (checked) {
+            updatedRoles = [...formData.roles, value];
+        } else {
+            updatedRoles = formData.roles.filter(role => role !== value);
+        }
+        setFormData({ ...formData, roles: updatedRoles });
+    };
+
+    const validateEmail = (email) => {
+        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!re.test(email)) {
+            setEmailError('Por favor, introduce un correo electrónico válido');
+        } else {
+            setEmailError('');
+        }
     };
 
     const handleSubmit = () => {
-        onSave(formData); // Guardar cambios
-        onClose(); // Cerrar modal
+        if (emailError) {
+            alert('Por favor, corrige los errores antes de guardar.');
+            return;
+        }
+        onSave(formData);
+        onClose();
     };
 
     return (
@@ -29,59 +61,35 @@ const UsuarioModal = ({ usuario, onSave, onClose }) => {
             <div className="modal-content">
                 <h3>{usuario ? 'Editar Usuario' : 'Agregar Usuario'}</h3>
                 <label>Nombre:</label>
-                <input
-                    type="text"
-                    name="nombre"
-                    value={formData.nombre}
-                    onChange={handleChange}
-                    placeholder="Nombre"
-                />
+                <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
                 <label>Apellido:</label>
-                <input
-                    type="text"
-                    name="apellido"
-                    value={formData.apellido}
-                    onChange={handleChange}
-                    placeholder="Apellido"
-                />
+                <input type="text" name="apellido" value={formData.apellido} onChange={handleChange} required />
                 <label>Email:</label>
-                <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Email"
-                />
-                <label>Rol:</label>
-                <select
-                    name="rol"
-                    value={formData.rol}
-                    onChange={handleChange}
-                >
-                    <option value="">Seleccionar rol</option>
-                    <option value="Veterinario">Veterinario</option>
-                    <option value="Cliente">Cliente</option>
-                    <option value="Administrador">Administrador</option>
-                </select>
-                <label>Estado:</label>
-                <select
-                    name="estado"
-                    value={formData.estado}
-                    onChange={handleChange}
-                >
-                    <option value="">Seleccionar estado</option>
-                    <option value="Activo">Activo</option>
-                    <option value="Inactivo">Inactivo</option>
-                </select>
-
-                <div className="modal-buttons">
-                    <button onClick={handleSubmit}>
-                        {usuario ? 'Guardar Cambios' : 'Agregar Usuario'}
-                    </button>
-                    <button className="button-cancel" onClick={onClose}>
-                        Cancelar
-                    </button>
+                <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+                {emailError && <p className="error">{emailError}</p>}
+                {!usuario && (
+                    <>
+                        <label>Contraseña:</label>
+                        <input type="password" name="password" value={formData.password} onChange={handleChange} required />
+                    </>
+                )}
+                {/* <label>Roles:</label> */}
+                <div>
+                    <h4>Roles:</h4>
+                    {['VETERINARIO', 'CLIENTE', 'RECEPCIONISTA'].map(role => (
+                        <label key={role}>
+                            <input
+                                type="checkbox"
+                                value={role}
+                                checked={formData.roles.includes(role)}
+                                onChange={handleRoleChange}
+                            />
+                            {role}
+                        </label>
+                    ))}
                 </div>
+                <button onClick={handleSubmit}>{usuario ? 'Guardar Cambios' : 'Agregar Usuario'}</button>
+                <button onClick={onClose}>Cancelar</button>
             </div>
         </div>
     );

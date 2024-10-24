@@ -1,0 +1,31 @@
+.roles-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .role-card {
+    background: #f4f4f4;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .role-card h3 {
+    margin-bottom: 10px;
+  }
+  
+  .role-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .role-card ul li {
+    margin-bottom: 10px;
+  }
+  
+  .role-card ul li label {
+    font-weight: bold;
+  }
+  
