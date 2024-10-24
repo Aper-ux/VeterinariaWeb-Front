@@ -201,3 +201,28 @@ export const getLowStockProducts = async () => {
     const response = await axios.get(`${API_URL}/inventory/low-stock`);
     return response.data;
 };
+
+// endpoints de citas
+export const getAllCitas = () => {
+    return axios.get(`${API_URL}/appointments`);
+};
+
+export const createCita = (citaData) => {
+    return axios.post(`${API_URL}/appointments`, citaData);
+};
+
+export const updateCita = (citaId, citaData) => {
+    return axios.put(`${API_URL}/appointments/${citaId}`, citaData);
+};
+
+export const deleteCita = (citaId) => {
+    return axios.delete(`${API_URL}/appointments/${citaId}`);
+};
+
+export const getAvailableTimes = (date) => {
+    return axios.get(`${API_URL}/appointments/available-times`, { params: { date } });
+};
+
+export const getAvailableDates = () => {
+    return axios.get(`${API_URL}/appointments/available-dates`);
+};
