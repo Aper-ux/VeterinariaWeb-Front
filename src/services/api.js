@@ -226,3 +226,21 @@ export const getAvailableTimes = (date) => {
 export const getAvailableDates = () => {
     return axios.get(`${API_URL}/appointments/available-dates`);
 };
+
+//endpoints de historial
+export const getAllHistorial = () => {
+    return axios.get(`${API_URL}/history`);
+};
+
+export const createHistorial = (historialData) => {
+    return axios.post(`${API_URL}/history`, historialData);
+};
+
+export const updateHistorial = (historialId, historialData) => {
+    return axios.put(`${API_URL}/history/${historialId}`, historialData);
+};
+
+export const deleteHistorial = (historialId) => {
+    return axios.delete(`${API_URL}/history/${historialId}`);
+};
+
