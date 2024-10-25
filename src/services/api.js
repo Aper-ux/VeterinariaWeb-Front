@@ -271,3 +271,26 @@ export const cancelAppointment = async (appointmentId) => {
 export const rescheduleAppointment = async (appointmentId, newDate) => {
     await axios.put(`/api/appointments/${appointmentId}/reschedule`, { newDate });
 };
+
+// Obtener todos los clientes
+export const getAllClients = async () => {
+    const response = await axios.get('/api/clients');
+    return response.data;
+};
+
+// Obtener mascotas por cliente
+export const getPetsByClient = async (clientId) => {
+    const response = await axios.get(`/api/clients/${clientId}/pets`);
+    return response.data;
+};
+
+// Comprobar disponibilidad del veterinario
+export const checkVetAvailability = async (date, time) => {
+    const response = await axios.post('/api/vet/check-availability', { date, time });
+    return response.data.available;
+};
+
+// Crear una nueva cita
+export const createAppointment = async (clientId, petId, date, time) => {
+    await axios.post('/api/appointments', { clientId, petId, date, time });
+};
