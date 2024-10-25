@@ -1,46 +1,68 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
 import Sidebar from './components/Sidebar';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import LogIn from './pages/LogIn';
 import TopBar from './components/TopBar';
+import LogIn from './pages/LogIn';
+import Register from './pages/Register';
+import AdminRegister from './pages/AdminRegister';
 import Clientes from './pages/Clientes';
 import Mascotas from './pages/Mascotas';
-import Usuarios from './pages/Usuarios';
-import Roles from './pages/Roles';
-import RegistroUsuarios from './pages/RegistroUsuarios';
-import Perfil from './pages/Perfil';
-import Inventario from './pages/Inventario';
-import './App.css'; // Asegúrate de que el archivo CSS esté correctamente referenciado
+import InventoryPage from './pages/InventoryPage';
 
-function App() {
+import Roles from './components/Roles';
+import PerfilCliente from './pages/PerfilCliente';
+import MascotasVet from './pages/MascotasVet';
+import UserList from './components/UserList'
+import './App.css'
+
+function AppContent() {
+    const { user, loading } = useAuth();
+
+    if (loading) {
+        return <div>Cargando...</div>;
+    }
+
     return (
         <Router>
             <div className="App">
                 <TopBar />
                 <Sidebar />
-                {/* Contenido principal de la aplicación */}
                 <div className="content">
                     <Switch>
-                        <Route path="/login" component={LogIn} />
-                        <Route path="/registro-usuarios" component={RegistroUsuarios} />
-                        <Route path="/perfil" component={Perfil} />
-                        <Route path="/inventario" component={Inventario} />
-                        <Route path="/clientes" component={Clientes} />
-                        <Route path="/mascotas" component={Mascotas} />
-                        <Route path="/usuarios" component={Usuarios} />
-                        <Route path="/roles" component={Roles} />
-                        <Route path="/" exact>
-                            <h1>Bienvenido a la Veterinaria</h1>
-                            <p>Selecciona una opción en el menú para comenzar.</p>
-                            <div class="container">
-                                <a href="/login" className="button">Iniciar Sesión</a>
-                                <a href="/registro-usuarios" className="button">Registrarse</a>
-                            </div>
+                        <Route path="/login">
+                            {user ? <Redirect to="/perfil" /> : <LogIn />}
+                        </Route>
+                        <Route path="/register">
+                            {user ? <Redirect to="/perfil" /> : <Register />}
+                        </Route>
+                        <PrivateRoute path="/admin-register" component={AdminRegister} roles={['VETERINARIO']} />
+                        <PrivateRoute path="/clientes" component={Clientes} roles={['VETERINARIO', 'RECEPCIONISTA']} />
+                        <PrivateRoute path="/inventory" component={InventoryPage} roles={['VETERINARIO', 'RECEPCIONISTA']} />
+                        <PrivateRoute path="/mascotas" component={Mascotas} />
+                        <PrivateRoute path="/vetmascotas" component={MascotasVet} roles={['VETERINARIO']} />
+                        <PrivateRoute path="/usuarios" component={UserList} roles={['VETERINARIO']} />
+                        <PrivateRoute path="/roles" component={Roles} roles={['VETERINARIO']} />
+                        <PrivateRoute path="/perfil" component={PerfilCliente} />
+                        <Route exact path="/">
+                            <Redirect to={user ? "/perfil" : "/login"} />
                         </Route>
                     </Switch>
                 </div>
+                <ToastContainer position="bottom-right" autoClose={3000} />
             </div>
         </Router>
+    );
+}
+
+function App() {
+    return (
+        <AuthProvider>
+            <AppContent />
+        </AuthProvider>
     );
 }
 
