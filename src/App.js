@@ -20,6 +20,7 @@ import MascotasVet from './pages/MascotasVet';
 import UserList from './components/UserList'
 import HistorialClinico from './pages/HistorialClinico';
 import HistorialClinicoRegistro from './pages/HistorialClinicoRegistro';
+import CitasMascota from './pages/CitasMascota';
 
 
 import './App.css'
@@ -45,6 +46,8 @@ function AppContent() {
                             {user ? <Redirect to="/perfil" /> : <Register />}
                         </Route>
                         
+
+                        <PrivateRoute path="/mis-citas" component={CitasMascota}/>
                         <PrivateRoute path="/registro-historial/:petId" component={HistorialClinicoRegistro} roles={['VETERINARIO']} />
                         <PrivateRoute path="/admin-register" component={AdminRegister} roles={['VETERINARIO']} />
                         <PrivateRoute path="/clientes" component={Clientes} roles={['VETERINARIO', 'RECEPCIONISTA']} />

@@ -256,3 +256,18 @@ export const deleteHistorial = (historialId) => {
     return axios.delete(`${API_URL}/history/${historialId}`);
 };
 
+// Obtener las citas del cliente autenticado
+export const getMyAppointments = async () => {
+    const response = await axios.get('/api/appointments/my-pets');
+    return response.data;
+};
+
+// Cancelar una cita
+export const cancelAppointment = async (appointmentId) => {
+    await axios.put(`/api/appointments/${appointmentId}/cancel`);
+};
+
+// Reprogramar una cita
+export const rescheduleAppointment = async (appointmentId, newDate) => {
+    await axios.put(`/api/appointments/${appointmentId}/reschedule`, { newDate });
+};
