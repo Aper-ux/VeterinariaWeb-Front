@@ -46,6 +46,7 @@ const Sidebar = () => {
                                             <li><button onClick={() => handleNavigation('/vetmascotas')}>Todas las Mascotas</button></li>
                                             <li><button onClick={() => handleNavigation('/inventory')}>Inventario</button></li>
                                             <li><button onClick={() => handleNavigation('/daily-appointments')}>Citas</button></li>
+                                            <li><button onClick={() => handleNavigation('/configurar-recordatorio')}>Configurar Recordatorio</button></li>
                                         </>
                                     )}
                                     {hasRole(['VETERINARIO']) && (
