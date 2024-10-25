@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getAllPets, createPet, updatePet, deletePet } from '../services/api'; // Importa la nueva función
+import { Link } from 'react-router-dom';
+import { getAllPets, createPet, updatePet, deletePet } from '../services/api';
 import MascotaModal from '../components/MascotaModal';
 import { toast } from 'react-toastify';
 
@@ -10,13 +11,13 @@ const MascotasVet = () => {
     const [isAdding, setIsAdding] = useState(false);
 
     useEffect(() => {
-        fetchMascotas();  // Cambiamos la llamada a la nueva función
+        fetchMascotas();
     }, []);
 
     const fetchMascotas = async () => {
         try {
-            const response = await getAllPets();  // Llamada a getAllPets() en lugar de getCurrentUserPets()
-            setMascotas(response);  // Actualizamos el estado con las mascotas obtenidas
+            const response = await getAllPets();
+            setMascotas(response);
         } catch (error) {
             console.error('Error fetching pets:', error);
             toast.error('Error al cargar las mascotas');
@@ -88,6 +89,9 @@ const MascotasVet = () => {
                             <td>
                                 <button onClick={() => handleEdit(mascota)} className="button-61">Editar</button>
                                 <button onClick={() => handleDelete(mascota.id)} className="button-61">Eliminar</button>
+                                <Link to={`/registro-historial/${mascota.id}`} className="button-61">
+                                    Registrar Historial
+                                </Link>
                             </td>
                         </tr>
                     ))}

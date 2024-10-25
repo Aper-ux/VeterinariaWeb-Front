@@ -1,0 +1,99 @@
+/* Contenedor principal del historial clínico */
+.historial-clinico-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Estilo para el título */
+  .historial-clinico-container h1 {
+    text-align: center;
+    font-size: 28px;
+    color: #6200ee;
+    margin-bottom: 20px;
+  }
+  
+  /* Filtros */
+  .filtros {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .filtros label {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .filtros input,
+  .filtros select {
+    padding: 8px;
+    font-size: 14px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .filtros button {
+    background-color: #6200ee;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .filtros button:hover {
+    background-color: #3700b3;
+  }
+  
+  /* Lista de historial */
+  .historial-list {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Cada ítem del historial */
+  .historial-item {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+  }
+  
+  .historial-item:hover {
+    transform: translateY(-3px);
+  }
+  
+  /* Título de cada tipo de consulta */
+  .historial-item h3 {
+    color: #6200ee;
+    margin-bottom: 10px;
+  }
+  
+  /* Texto del historial */
+  .historial-item p {
+    margin: 5px 0;
+    color: #555;
+  }
+  
+  /* Mensaje de no se encontraron registros */
+  .no-registros {
+    text-align: center;
+    font-size: 16px;
+    color: #888;
+  }
+  
