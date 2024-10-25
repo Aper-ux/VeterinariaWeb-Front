@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { getCurrentUserPets, createPet, updatePet, deletePet } from '../services/api';
 import MascotaModal from '../components/MascotaModal';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+
 
 const Mascotas = () => {
     const [mascotas, setMascotas] = useState([]);
@@ -9,58 +11,34 @@ const Mascotas = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
 
-    useEffect(() => {
-        fetchMascotas();
-    }, []);
+    useEffect(() => { fetchMascotas(); }, []);
 
     const fetchMascotas = async () => {
         try {
             const response = await getCurrentUserPets();
             setMascotas(response);
         } catch (error) {
-            console.error('Error fetching pets:', error);
             toast.error('Error al cargar las mascotas');
         }
     };
 
-    const handleEdit = (mascota) => {
-        setSelectedMascota(mascota);
-        setIsEditing(true);
-    };
-
-    const handleAdd = () => {
-        setSelectedMascota(null);
-        setIsAdding(true);
-    };
-
-    const handleDelete = async (mascotaId) => {
-        if (window.confirm('¿Estás seguro de que deseas eliminar esta mascota?')) {
-            try {
-                await deletePet(mascotaId);
-                toast.success('Mascota eliminada con éxito');
-                fetchMascotas();
-            } catch (error) {
-                console.error('Error deleting pet:', error);
-                toast.error('Error al eliminar la mascota');
-            }
+    const handleEdit = mascota => { setSelectedMascota(mascota); setIsEditing(true); };
+    const handleAdd = () => { setSelectedMascota(null); setIsAdding(true); };
+    const handleDelete = async mascotaId => {
+        if (window.confirm('¿Eliminar esta mascota?')) {
+            try { await deletePet(mascotaId); fetchMascotas(); toast.success('Mascota eliminada'); }
+            catch { toast.error('Error al eliminar'); }
         }
     };
 
-    const handleSave = async (mascota) => {
+    const handleSave = async mascota => {
         try {
-            if (isEditing) {
-                await updatePet(mascota.id, mascota);
-                toast.success('Mascota actualizada con éxito');
-            } else if (isAdding) {
-                await createPet(mascota);
-                toast.success('Mascota agregada con éxito');
-            }
-            fetchMascotas();
-            setIsEditing(false);
-            setIsAdding(false);
-        } catch (error) {
-            console.error('Error saving pet:', error);
-            toast.error('Error al guardar la mascota');
+            if (isEditing) await updatePet(mascota.id, mascota);
+            else if (isAdding) await createPet(mascota);
+            fetchMascotas(); setIsEditing(false); setIsAdding(false);
+            toast.success(`Mascota ${isEditing ? 'actualizada' : 'agregada'} con éxito`);
+        } catch {
+            toast.error(`Error al ${isEditing ? 'actualizar' : 'agregar'} la mascota`);
         }
     };
 
@@ -70,37 +48,23 @@ const Mascotas = () => {
             <button onClick={handleAdd} className="button-56">Agregar Mascota</button>
             <table>
                 <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Especie</th>
-                        <th>Raza</th>
-                        <th>Edad</th>
-                        <th>Acciones</th>
-                    </tr>
+                    <tr><th>Nombre</th><th>Especie</th><th>Raza</th><th>Edad</th><th>Acciones</th></tr>
                 </thead>
                 <tbody>
                     {mascotas.map(mascota => (
                         <tr key={mascota.id}>
-                            <td>{mascota.name}</td>
-                            <td>{mascota.species}</td>
-                            <td>{mascota.breed}</td>
-                            <td>{mascota.age}</td>
+                            <td>{mascota.name}</td><td>{mascota.species}</td><td>{mascota.breed}</td><td>{mascota.age}</td>
                             <td>
                                 <button onClick={() => handleEdit(mascota)} className="button-61">Editar</button>
                                 <button onClick={() => handleDelete(mascota.id)} className="button-61">Eliminar</button>
+                                <Link to={`/historial/${mascota.id}`} className="button-61">Ver Historial</Link>
+
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-
-            {(isEditing || isAdding) && (
-                <MascotaModal
-                    mascota={selectedMascota}
-                    onSave={handleSave}
-                    onClose={() => { setIsEditing(false); setIsAdding(false); }}
-                />
-            )}
+            {(isEditing || isAdding) && <MascotaModal mascota={selectedMascota} onSave={handleSave} onClose={() => { setIsEditing(false); setIsAdding(false); }} />}
         </div>
     );
 };

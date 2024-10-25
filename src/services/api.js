@@ -39,7 +39,19 @@ axios.interceptors.response.use(
     }
 );
 
-
+export const getDailyAppointments = async (veterinarianId) => {
+    try {
+      const response = await axios.get(`${API_URL}/api/appointments/daily`, {
+        params: {
+          veterinarianId: veterinarianId
+        }
+      });
+      return response.data.data.appointments;
+    } catch (error) {
+      console.error('Error al obtener las citas diarias:', error);
+      throw error;
+    }
+  };
 // Función de login
 export const loginApi = (credentials) => {
     return axios.post(`${API_URL}/auth/login`, credentials);
@@ -87,10 +99,27 @@ export const updateUserRolesApi = (userId, roles) => {
     return axios.put(`${API_URL}/users/${userId}/roles`, roles);
 };
 
-//perfil y mascotas
-export const getAllPets = () => {
-    return axios.get(`${API_URL}/pets`); // Cambia a tu endpoint que devuelve todas las mascotas
+export const getAllPets = async (page = 0, size = 10) => {
+    try {
+        const response = await axios.get(`${API_URL}/pets`, {
+            params: { page, size } // Pasar número de página y tamaño como parámetros
+        });
+        console.log('Respuesta completa:', response);
+        if (response && response.content) {
+            return response;
+        } else {
+            console.error('La respuesta no contiene el campo `content` esperado.');
+            return { content: [], totalPages: 1 }; // Devuelve un array vacío si no hay contenido
+        }
+    } catch (error) {
+        console.error('Error en la solicitud de mascotas:', error);
+        throw error;
+    }
 };
+
+
+
+
 export const getUserProfile = () => {
     return axios.get(`${API_URL}/users/me`);
 };
@@ -227,20 +256,63 @@ export const getAvailableDates = () => {
     return axios.get(`${API_URL}/appointments/available-dates`);
 };
 
-//endpoints de historial
-export const getAllHistorial = () => {
-    return axios.get(`${API_URL}/history`);
+// Endpoints de historial clínico
+export const getAllHistorial = (petId) => {
+    return axios.get(`${API_URL}/historial-clinico/mascota/${petId}`);
+  };
+  
+export const createHistorial = (petId, historialData) => {
+    return axios.post(`${API_URL}/historial-clinico/mascota/${petId}`, historialData);
 };
 
-export const createHistorial = (historialData) => {
-    return axios.post(`${API_URL}/history`, historialData);
-};
+
 
 export const updateHistorial = (historialId, historialData) => {
-    return axios.put(`${API_URL}/history/${historialId}`, historialData);
+    // Endpoint para actualizar un historial existente
+    return axios.put(`${API_URL}/historial-clinico/${historialId}`, historialData);
 };
 
 export const deleteHistorial = (historialId) => {
-    return axios.delete(`${API_URL}/history/${historialId}`);
+    // Endpoint para eliminar un historial específico
+    return axios.delete(`${API_URL}/historial-clinico/${historialId}`);
 };
 
+
+// Obtener las citas del cliente autenticado
+export const getMyAppointments = async () => {
+    const response = await axios.get('/api/appointments/my-pets');
+    return response.data;
+};
+
+// Cancelar una cita
+export const cancelAppointment = async (appointmentId) => {
+    await axios.put(`/api/appointments/${appointmentId}/cancel`);
+};
+
+// Reprogramar una cita
+export const rescheduleAppointment = async (appointmentId, newDate) => {
+    await axios.put(`/api/appointments/${appointmentId}/reschedule`, { newDate });
+};
+
+// Obtener todos los clientes
+export const getAllClients = async () => {
+    const response = await axios.get('/api/clients');
+    return response.data;
+};
+
+// Obtener mascotas por cliente
+export const getPetsByClient = async (clientId) => {
+    const response = await axios.get(`/api/clients/${clientId}/pets`);
+    return response.data;
+};
+
+// Comprobar disponibilidad del veterinario
+export const checkVetAvailability = async (date, time) => {
+    const response = await axios.post('/api/vet/check-availability', { date, time });
+    return response.data.available;
+};
+
+// Crear una nueva cita
+export const createAppointment = async (clientId, petId, date, time) => {
+    await axios.post('/api/appointments', { clientId, petId, date, time });
+};
