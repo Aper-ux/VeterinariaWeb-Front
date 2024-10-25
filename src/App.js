@@ -12,7 +12,11 @@ import AdminRegister from './pages/AdminRegister';
 import Clientes from './pages/Clientes';
 import Mascotas from './pages/Mascotas';
 import InventoryPage from './pages/InventoryPage';
+<<<<<<< Updated upstream
 import historial from './pages/Historial';
+=======
+import DailyAppointments from './pages/DailyAppointments'; 
+>>>>>>> Stashed changes
 import Roles from './components/Roles';
 import PerfilCliente from './pages/PerfilCliente';
 import MascotasVet from './pages/MascotasVet';
@@ -48,6 +52,7 @@ function AppContent() {
                         <PrivateRoute path="/usuarios" component={UserList} roles={['VETERINARIO']} />
                         <PrivateRoute path="/roles" component={Roles} roles={['VETERINARIO']} />
                         <PrivateRoute path="/perfil" component={PerfilCliente} />
+                        <PrivateRoute path="/daily-appointments" component={DailyAppointments} roles={['VETERINARIO']} />  {/* Nueva ruta */}
                         <Route exact path="/">
                             <Redirect to={user ? "/perfil" : "/login"} />
                         </Route>

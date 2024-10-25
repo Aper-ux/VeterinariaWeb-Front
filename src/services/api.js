@@ -39,7 +39,19 @@ axios.interceptors.response.use(
     }
 );
 
-
+export const getDailyAppointments = async (veterinarianId) => {
+    try {
+      const response = await axios.get(`${API_URL}/api/appointments/daily`, {
+        params: {
+          veterinarianId: veterinarianId
+        }
+      });
+      return response.data.data.appointments;
+    } catch (error) {
+      console.error('Error al obtener las citas diarias:', error);
+      throw error;
+    }
+  };
 // Función de login
 export const loginApi = (credentials) => {
     return axios.post(`${API_URL}/auth/login`, credentials);
