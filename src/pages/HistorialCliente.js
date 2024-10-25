@@ -1,73 +1,45 @@
-// Historial accessible por el veterinario
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom'; // Para obtener el petId de la URL
+import { getAllHistorial } from '../services/api'; // Importar la función de la API para obtener el historial clínico
+import './HistorialClinico.css';
 
-import React, { useState, useEffect } from 'react';
-import { getAllHistorial} from '../services/api'; // Importa la nueva función
-import { toast } from 'react-toastify';
+const HistorialClinico = () => {
+  const { petId } = useParams(); // Extraer el petId de la URL
+  const [historial, setHistorial] = useState([]);
 
-const Historial = () => {
-    const [historial, setHistorial] = useState([]);
+  useEffect(() => {
+    fetchHistorial(); // Cargar el historial al cargar la página
+  }, []);
 
-    useEffect(() => {
-        fetchHistorial();  // Cambiamos la llamada a la nueva función
-    }, []);
+  const fetchHistorial = async () => {
+    try {
+      const response = await getAllHistorial(petId); // Obtener historial clínico desde el backend
+      setHistorial(response);
+    } catch (error) {
+      console.error('Error al obtener el historial clínico:', error);
+    }
+  };
 
-    const fetchHistorial = async () => {
-        try {
-            const response = await getAllHistorial();  // Llamada a getAllHistorial() en lugar de getCurrentUserHistorial()
-            setHistorial(response);  // Actualizamos el estado con las historial obtenidas
-        } catch (error) {
-            console.error('Error fetching historial:', error);
-            toast.error('Error al cargar las historial');
-        }
-    };
+  return (
+    <div className="historial-clinico-container">
+      <h1>Historial Clínico de la Mascota</h1>
 
-    return (
-        <div className="historial-container">
-            <h2>Historial</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Mascota</th>
-                        <th>Dueño</th>
-                        <th>Veterinario</th> {/* Veterinario asignado al historial */}
-                        <th>Motivo de consulta</th>
-                        <th>Alergias</th>
-                        <th>Peso</th>
-                        <th>Temperatura</th>
-                        <th>Vacunas</th>
-                        <th>Sintomas</th>
-                        <th>Diagnostico</th>
-                        <th>Tratamiento</th> {/* Consulta, vacunación, cirugía, etc. */}
-                        <th>Resultados de examenes</th>
-                        <th>Notas adicionales</th>
-                        <th>Proximos pasos</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {historial.map(historial => (
-                        <tr key={historial.id}>
-                            <td>{historial.date}</td>
-                            <td>{historial.pet}</td>
-                            <td>{historial.owner}</td>
-                            <td>{historial.veterinarian}</td>
-                            <td>{historial.reason}</td>
-                            <td>{historial.allergies}</td>
-                            <td>{historial.weight}</td>
-                            <td>{historial.temperature}</td>
-                            <td>{historial.vaccines}</td>
-                            <td>{historial.symptoms}</td>
-                            <td>{historial.diagnosis}</td>
-                            <td>{historial.treatment}</td>
-                            <td>{historial.examResults}</td>
-                            <td>{historial.notes}</td>
-                            <td>{historial.nextSteps}</td>                 
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
+      <div className="historial-list">
+        {historial.length > 0 ? (
+          historial.map((item) => (
+            <div key={item.id} className="historial-item">
+              <h3>{item.diagnostico}</h3>
+              <p>Fecha de Visita: {new Date(item.fechaVisita).toLocaleDateString()}</p>
+              <p>Tratamiento: {item.tratamiento}</p>
+              <p>Motivo: {item.motivoConsulta}</p>
+            </div>
+          ))
+        ) : (
+          <p>No se encontraron registros en el historial.</p>
+        )}
+      </div>
+    </div>
+  );
 };
 
-export default Historial;
+export default HistorialClinico;
