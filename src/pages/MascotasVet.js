@@ -111,7 +111,7 @@ const MascotasVet = () => {
                                 <button onClick={() => handleEdit(mascota)} className="button-61">Editar</button>
                                 <button onClick={() => handleDelete(mascota.id)} className="button-61">Eliminar</button>
                                 <Link to={`/registro-historial/${mascota.id}`} className="button-61">Registrar Historial</Link>
-                                <Link to={`/historial/${mascota.id}`} className="button-61">Ver Historial</Link>
+                                <Link to={`/ver-historial/${mascota.id}`} className="button-61">Ver Historial</Link>
                             </td>
                         </tr>
                     ))}

@@ -265,8 +265,6 @@ export const createHistorial = (petId, historialData) => {
     return axios.post(`${API_URL}/historial-clinico/mascota/${petId}`, historialData);
 };
 
-
-
 export const updateHistorial = (historialId, historialData) => {
     // Endpoint para actualizar un historial existente
     return axios.put(`${API_URL}/historial-clinico/${historialId}`, historialData);
