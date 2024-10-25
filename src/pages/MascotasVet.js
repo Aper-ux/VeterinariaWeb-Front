@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getAllPets, createPet, updatePet, deletePet } from '../services/api';
+import { getAllPets, createPet, deletePet } from '../services/api';
 import MascotaModal from '../components/MascotaModal';
 import { toast } from 'react-toastify';
 
 const MascotasVet = () => {
     const [mascotas, setMascotas] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0); // Página actual
+    const [totalPages, setTotalPages] = useState(1); // Número total de páginas
     const [selectedMascota, setSelectedMascota] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [isAdding, setIsAdding] = useState(false);
+    const [isAdding, setIsAdding] = useState(false); // Nuevo estado para agregar mascota
 
     useEffect(() => {
-        fetchMascotas();
-    }, []);
+        fetchMascotas(currentPage); // Cargar mascotas cuando cambia la página
+    }, [currentPage]);
 
-    const fetchMascotas = async () => {
+    const fetchMascotas = async (page) => {
         try {
-            const response = await getAllPets();
-            setMascotas(response);
+            const response = await getAllPets(page, 10); // Pasar el número de página
+            setMascotas(response.content); // Mascotas en la página actual
+            setTotalPages(response.totalPages); // Total de páginas
         } catch (error) {
             console.error('Error fetching pets:', error);
             toast.error('Error al cargar las mascotas');
@@ -31,7 +34,7 @@ const MascotasVet = () => {
 
     const handleAdd = () => {
         setSelectedMascota(null);
-        setIsAdding(true);
+        setIsAdding(true); // Abre el modal para agregar una nueva mascota
     };
 
     const handleDelete = async (mascotaId) => {
@@ -39,7 +42,7 @@ const MascotasVet = () => {
             try {
                 await deletePet(mascotaId);
                 toast.success('Mascota eliminada con éxito');
-                fetchMascotas();
+                fetchMascotas(currentPage); // Recargar mascotas después de eliminar
             } catch (error) {
                 console.error('Error deleting pet:', error);
                 toast.error('Error al eliminar la mascota');
@@ -47,28 +50,25 @@ const MascotasVet = () => {
         }
     };
 
-    const handleSave = async (mascota) => {
-        try {
-            if (isEditing) {
-                await updatePet(mascota.id, mascota);
-                toast.success('Mascota actualizada con éxito');
-            } else if (isAdding) {
-                await createPet(mascota);
-                toast.success('Mascota agregada con éxito');
-            }
-            fetchMascotas();
-            setIsEditing(false);
-            setIsAdding(false);
-        } catch (error) {
-            console.error('Error saving pet:', error);
-            toast.error('Error al guardar la mascota');
+    const handleNextPage = () => {
+        if (currentPage < totalPages - 1) {
+            setCurrentPage(currentPage + 1); // Ir a la siguiente página
+        }
+    };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1); // Ir a la página anterior
         }
     };
 
     return (
         <div className="mascotas-container">
             <h2>Todas las Mascotas Registradas</h2>
+
+            {/* Botón para agregar nueva mascota */}
             <button onClick={handleAdd} className="button-56">Agregar Mascota</button>
+
             <table>
                 <thead>
                     <tr>
@@ -87,22 +87,40 @@ const MascotasVet = () => {
                             <td>{mascota.breed}</td>
                             <td>{mascota.age}</td>
                             <td>
+                                {/* Botones de acción */}
                                 <button onClick={() => handleEdit(mascota)} className="button-61">Editar</button>
                                 <button onClick={() => handleDelete(mascota.id)} className="button-61">Eliminar</button>
-                                <Link to={`/registro-historial/${mascota.id}`} className="button-61">
-                                    Registrar Historial
-                                </Link>
+                                <Link to={`/registro-historial/${mascota.id}`} className="button-61">Registrar Historial</Link>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
+            {/* Botones de paginación */}
+            <div className="pagination-buttons">
+                <button onClick={handlePreviousPage} disabled={currentPage === 0}>
+                    Página anterior
+                </button>
+                <span>Página {currentPage + 1} de {totalPages}</span>
+                <button onClick={handleNextPage} disabled={currentPage === totalPages - 1}>
+                    Página siguiente
+                </button>
+            </div>
+
+            {/* Modal para editar o agregar mascota */}
             {(isEditing || isAdding) && (
                 <MascotaModal
                     mascota={selectedMascota}
-                    onSave={handleSave}
-                    onClose={() => { setIsEditing(false); setIsAdding(false); }}
+                    onSave={() => { 
+                        setIsEditing(false); 
+                        setIsAdding(false); 
+                        fetchMascotas(currentPage); 
+                    }} // Recargar después de editar o agregar
+                    onClose={() => {
+                        setIsEditing(false);
+                        setIsAdding(false);
+                    }}
                 />
             )}
         </div>

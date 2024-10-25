@@ -39,7 +39,7 @@ const Sidebar = () => {
                                         <li><button onClick={() => handleNavigation('/perfil')}>Mi Perfil</button></li>
                                         <li><button onClick={() => handleNavigation('/mascotas')}>Mis Mascotas</button></li>
                                         <li><button onClick={() => handleNavigation('/mis-citas')}>Mis Citas</button></li>
-                                        <li><button onClick={() => handleNavigation('/historial')}>Historial Médico</button></li>
+                                        
                                         {hasRole(['VETERINARIO', 'RECEPCIONISTA']) && (
                                             <>
                                                 <li><button onClick={() => handleNavigation('/vetmascotas')}>Todas las Mascotas</button></li>
