@@ -1,56 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { createHistorial } from '../services/api'; // Importar la función de la API para crear el historial
 import './HistorialClinicoRegistro.css';
 
-const HistorialClinicoRegistro = ({ onSave }) => {
+const HistorialClinicoRegistro = () => {
     const { petId } = useParams(); // Obtiene el petId de la URL
-    const [petInfo, setPetInfo] = useState(null);
     const [formData, setFormData] = useState({
-        reason: '',
-        diagnosis: '',
-        treatment: '',
-        notes: '',
+        motivoConsulta: '',
+        diagnostico: '',
+        tratamiento: '',
+        observaciones: '',
     });
-    const [errors, setErrors] = useState({});
-
-    // Cargar la información de la mascota para confirmación visual
-    useEffect(() => {
-        const fetchPetInfo = async () => {
-            try {
-                const response = await axios.get(`/api/mascotas/${petId}`);
-                setPetInfo(response.data); // Actualizar con la información de la mascota
-            } catch (error) {
-                console.error('Error al obtener información de la mascota', error);
-            }
-        };
-        fetchPetInfo();
-    }, [petId]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-        if (errors[name]) {
-            setErrors({ ...errors, [name]: '' });
-        }
-    };
-
-    const validateForm = () => {
-        const newErrors = {};
-        if (!formData.reason.trim()) newErrors.reason = 'El motivo de la consulta es obligatorio.';
-        if (!formData.diagnosis.trim()) newErrors.diagnosis = 'El diagnóstico es obligatorio.';
-        if (!formData.treatment.trim()) newErrors.treatment = 'El tratamiento es obligatorio.';
-        
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!validateForm()) return;
-
         try {
-            await onSave(petId, formData); // Guardar el historial en la mascota correspondiente
+            await createHistorial(petId, formData); // Guardar el historial en la mascota correspondiente
             alert('Historial registrado correctamente.');
         } catch (error) {
             alert('Error al guardar el historial.');
@@ -60,57 +30,43 @@ const HistorialClinicoRegistro = ({ onSave }) => {
     return (
         <div className="historial-registro-container">
             <h2>Registrar Historial Clínico</h2>
-            {petInfo ? (
-                <div className="pet-info">
-                    <h3>{`Mascota: ${petInfo.name}`}</h3>
-                    <p>{`Dueño: ${petInfo.clientName}`}</p>
-                </div>
-            ) : (
-                <p>Cargando información de la mascota...</p>
-            )}
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label htmlFor="reason">Motivo de consulta:</label>
+                    <label htmlFor="motivoConsulta">Motivo de consulta:</label>
                     <input
                         type="text"
-                        id="reason"
-                        name="reason"
-                        value={formData.reason}
+                        id="motivoConsulta"
+                        name="motivoConsulta"
+                        value={formData.motivoConsulta}
                         onChange={handleChange}
-                        className={errors.reason ? 'error' : ''}
                     />
-                    {errors.reason && <span className="error-message">{errors.reason}</span>}
                 </div>
                 <div className="form-group">
-                    <label htmlFor="diagnosis">Diagnóstico:</label>
+                    <label htmlFor="diagnostico">Diagnóstico:</label>
                     <input
                         type="text"
-                        id="diagnosis"
-                        name="diagnosis"
-                        value={formData.diagnosis}
+                        id="diagnostico"
+                        name="diagnostico"
+                        value={formData.diagnostico}
                         onChange={handleChange}
-                        className={errors.diagnosis ? 'error' : ''}
                     />
-                    {errors.diagnosis && <span className="error-message">{errors.diagnosis}</span>}
                 </div>
                 <div className="form-group">
-                    <label htmlFor="treatment">Tratamiento:</label>
+                    <label htmlFor="tratamiento">Tratamiento:</label>
                     <input
                         type="text"
-                        id="treatment"
-                        name="treatment"
-                        value={formData.treatment}
+                        id="tratamiento"
+                        name="tratamiento"
+                        value={formData.tratamiento}
                         onChange={handleChange}
-                        className={errors.treatment ? 'error' : ''}
                     />
-                    {errors.treatment && <span className="error-message">{errors.treatment}</span>}
                 </div>
                 <div className="form-group">
-                    <label htmlFor="notes">Notas adicionales:</label>
+                    <label htmlFor="observaciones">Notas adicionales:</label>
                     <textarea
-                        id="notes"
-                        name="notes"
-                        value={formData.notes}
+                        id="observaciones"
+                        name="observaciones"
+                        value={formData.observaciones}
                         onChange={handleChange}
                     />
                 </div>

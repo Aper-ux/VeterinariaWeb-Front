@@ -258,14 +258,14 @@ export const getAvailableDates = () => {
 
 // Endpoints de historial clínico
 export const getAllHistorial = (petId) => {
-    // Endpoint para obtener el historial de una mascota específica
     return axios.get(`${API_URL}/historial-clinico/mascota/${petId}`);
-};
-
+  };
+  
 export const createHistorial = (petId, historialData) => {
-    // Endpoint para crear un nuevo historial para una mascota
     return axios.post(`${API_URL}/historial-clinico/mascota/${petId}`, historialData);
 };
+
+
 
 export const updateHistorial = (historialId, historialData) => {
     // Endpoint para actualizar un historial existente

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './HistorialClinico.css';
 
-
 const HistorialClinico = () => {
   const [historial, setHistorial] = useState([]);
+  const [filteredHistorial, setFilteredHistorial] = useState([]); // Historial filtrado
   const [filters, setFilters] = useState({
     tipo: '',
     fechaInicio: '',
@@ -18,7 +18,8 @@ const HistorialClinico = () => {
   const fetchHistorial = async () => {
     try {
       const response = await axios.get('/api/pets/me/historial'); // Endpoint para obtener el historial de la mascota del cliente autenticado
-      setHistorial(response.data.data);
+      setHistorial(response.data.data); // Ajusta según la estructura de respuesta
+      setFilteredHistorial(response.data.data); // Inicialmente, las mismas que el historial
     } catch (error) {
       console.error('Error al obtener el historial clínico:', error);
     }
@@ -30,21 +31,21 @@ const HistorialClinico = () => {
 
   const applyFilters = () => {
     // Filtrar el historial por tipo de consulta y fechas
-    let filteredHistorial = [...historial];
+    let newFilteredHistorial = [...historial];
 
     if (filters.tipo) {
-      filteredHistorial = filteredHistorial.filter(item => item.tipo === filters.tipo);
+      newFilteredHistorial = newFilteredHistorial.filter(item => item.tipo === filters.tipo);
     }
 
     if (filters.fechaInicio) {
-      filteredHistorial = filteredHistorial.filter(item => new Date(item.fecha) >= new Date(filters.fechaInicio));
+      newFilteredHistorial = newFilteredHistorial.filter(item => new Date(item.fecha) >= new Date(filters.fechaInicio));
     }
 
     if (filters.fechaFin) {
-      filteredHistorial = filteredHistorial.filter(item => new Date(item.fecha) <= new Date(filters.fechaFin));
+      newFilteredHistorial = newFilteredHistorial.filter(item => new Date(item.fecha) <= new Date(filters.fechaFin));
     }
 
-    setHistorial(filteredHistorial);
+    setFilteredHistorial(newFilteredHistorial);
   };
 
   return (
@@ -75,8 +76,8 @@ const HistorialClinico = () => {
 
       {/* Mostrar Historial */}
       <div className="historial-list">
-        {historial.length > 0 ? (
-          historial.map((item) => (
+        {filteredHistorial.length > 0 ? (
+          filteredHistorial.map((item) => (
             <div key={item.id} className="historial-item">
               <h3>{item.tipo}</h3>
               <p>Fecha: {new Date(item.fecha).toLocaleDateString()}</p>

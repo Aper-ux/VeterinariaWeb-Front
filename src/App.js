@@ -18,11 +18,10 @@ import Roles from './components/Roles';
 import PerfilCliente from './pages/PerfilCliente';
 import MascotasVet from './pages/MascotasVet';
 import UserList from './components/UserList'
-import HistorialClinico from './pages/HistorialClinico';
 import HistorialClinicoRegistro from './pages/HistorialClinicoRegistro';
 import CitasMascota from './pages/CitasMascota';
 import AgendarCita from './pages/AgendarCita';
-
+import HistorialClinico from './pages/HistorialClinico';
 
 import './App.css'
 
@@ -54,7 +53,7 @@ function AppContent() {
                         <PrivateRoute path="/registro-historial/:petId" component={HistorialClinicoRegistro} roles={['VETERINARIO']} />
                         <PrivateRoute path="/admin-register" component={AdminRegister} roles={['VETERINARIO']} />
                         <PrivateRoute path="/clientes" component={Clientes} roles={['VETERINARIO', 'RECEPCIONISTA']} />
-                        <PrivateRoute path="/historial" component={HistorialClinico} />
+                        <PrivateRoute path="/ver-historial/:petId" component={HistorialClinico} />
                         <PrivateRoute path="/inventory" component={InventoryPage} roles={['VETERINARIO', 'RECEPCIONISTA']} />
                         <PrivateRoute path="/mascotas" component={Mascotas} />
                         <PrivateRoute path="/vetmascotas" component={MascotasVet} roles={['VETERINARIO']} />

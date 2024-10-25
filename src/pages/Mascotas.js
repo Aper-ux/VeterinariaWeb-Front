@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { getCurrentUserPets, createPet, updatePet, deletePet } from '../services/api';
 import MascotaModal from '../components/MascotaModal';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+
 
 const Mascotas = () => {
     const [mascotas, setMascotas] = useState([]);
@@ -55,7 +57,8 @@ const Mascotas = () => {
                             <td>
                                 <button onClick={() => handleEdit(mascota)} className="button-61">Editar</button>
                                 <button onClick={() => handleDelete(mascota.id)} className="button-61">Eliminar</button>
-                                
+                                <Link to={`/historial/${mascota.id}`} className="button-61">Ver Historial</Link>
+
                             </td>
                         </tr>
                     ))}
