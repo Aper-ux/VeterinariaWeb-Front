@@ -39,7 +39,19 @@ axios.interceptors.response.use(
     }
 );
 
-
+export const getDailyAppointments = async (veterinarianId) => {
+    try {
+      const response = await axios.get(`${API_URL}/api/appointments/daily`, {
+        params: {
+          veterinarianId: veterinarianId
+        }
+      });
+      return response.data.data.appointments;
+    } catch (error) {
+      console.error('Error al obtener las citas diarias:', error);
+      throw error;
+    }
+  };
 // Función de login
 export const loginApi = (credentials) => {
     return axios.post(`${API_URL}/auth/login`, credentials);
@@ -244,3 +256,41 @@ export const deleteHistorial = (historialId) => {
     return axios.delete(`${API_URL}/history/${historialId}`);
 };
 
+// Obtener las citas del cliente autenticado
+export const getMyAppointments = async () => {
+    const response = await axios.get('/api/appointments/my-pets');
+    return response.data;
+};
+
+// Cancelar una cita
+export const cancelAppointment = async (appointmentId) => {
+    await axios.put(`/api/appointments/${appointmentId}/cancel`);
+};
+
+// Reprogramar una cita
+export const rescheduleAppointment = async (appointmentId, newDate) => {
+    await axios.put(`/api/appointments/${appointmentId}/reschedule`, { newDate });
+};
+
+// Obtener todos los clientes
+export const getAllClients = async () => {
+    const response = await axios.get('/api/clients');
+    return response.data;
+};
+
+// Obtener mascotas por cliente
+export const getPetsByClient = async (clientId) => {
+    const response = await axios.get(`/api/clients/${clientId}/pets`);
+    return response.data;
+};
+
+// Comprobar disponibilidad del veterinario
+export const checkVetAvailability = async (date, time) => {
+    const response = await axios.post('/api/vet/check-availability', { date, time });
+    return response.data.available;
+};
+
+// Crear una nueva cita
+export const createAppointment = async (clientId, petId, date, time) => {
+    await axios.post('/api/appointments', { clientId, petId, date, time });
+};
