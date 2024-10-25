@@ -14,13 +14,13 @@ const Sidebar = () => {
 
     const handleNavigation = (path) => {
         history.push(path);
-        window.location.reload(); // Force page reload
+        window.location.reload(); // Forzar recarga de página
     };
 
     const handleLogout = () => {
         logout();
         history.push('/login');
-        window.location.reload(); // Force page reload
+        window.location.reload(); // Forzar recarga de página
     };
 
     return (
@@ -40,9 +40,9 @@ const Sidebar = () => {
                                 <>
                                     <li><button onClick={() => handleNavigation('/perfil')}>Mi Perfil</button></li>
                                     <li><button onClick={() => handleNavigation('/mascotas')}>Mis Mascotas</button></li>
+                                    <li><button onClick={() => handleNavigation('/historial')}>Historial Médico</button></li> {/* Botón de historial */}
                                     {hasRole(['VETERINARIO', 'RECEPCIONISTA']) && (
                                         <>
-                                            
                                             <li><button onClick={() => handleNavigation('/vetmascotas')}>Todas las Mascotas</button></li>
                                             <li><button onClick={() => handleNavigation('/inventory')}>Inventario</button></li>
                                         </>
@@ -51,7 +51,6 @@ const Sidebar = () => {
                                         <>
                                             <li><button onClick={() => handleNavigation('/usuarios')}>Usuarios</button></li>
                                             <li><button onClick={() => handleNavigation('/roles')}>Roles</button></li>
-                                            
                                         </>
                                     )}
                                     <li><button onClick={handleLogout} className="logout-button">Cerrar Sesión</button></li>

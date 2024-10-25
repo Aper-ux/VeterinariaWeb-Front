@@ -12,7 +12,7 @@ import AdminRegister from './pages/AdminRegister';
 import Clientes from './pages/Clientes';
 import Mascotas from './pages/Mascotas';
 import InventoryPage from './pages/InventoryPage';
-
+import historial from './pages/Historial';
 import Roles from './components/Roles';
 import PerfilCliente from './pages/PerfilCliente';
 import MascotasVet from './pages/MascotasVet';
@@ -39,6 +39,7 @@ function AppContent() {
                         <Route path="/register">
                             {user ? <Redirect to="/perfil" /> : <Register />}
                         </Route>
+                        <PrivateRoute path="/historial" component={historial} />
                         <PrivateRoute path="/admin-register" component={AdminRegister} roles={['VETERINARIO']} />
                         <PrivateRoute path="/clientes" component={Clientes} roles={['VETERINARIO', 'RECEPCIONISTA']} />
                         <PrivateRoute path="/inventory" component={InventoryPage} roles={['VETERINARIO', 'RECEPCIONISTA']} />
