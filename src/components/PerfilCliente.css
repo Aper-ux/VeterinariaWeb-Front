@@ -15,7 +15,7 @@
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
-    color: #4a0080; /* Color más oscuro para los labels */
+    color: #30313f; /* Color más oscuro para los labels */
     font-size: 1.1em; /* Tamaño de fuente ligeramente mayor */
 }
 
@@ -43,7 +43,7 @@
 }
 
 h2, h3 {
-    color: #4a0080;
+    color: #30313f;
     margin-bottom: 20px;
 }
 
