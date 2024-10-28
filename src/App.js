@@ -17,17 +17,12 @@ import Roles from './components/Roles';
 import PerfilCliente from './pages/PerfilCliente';
 import MascotasVet from './pages/MascotasVet';
 import UserList from './components/UserList'
-import HistorialClinico from './pages/HistorialClinico';
+
 import HistorialClinicoRegistro from './pages/HistorialClinicoRegistro';
-<<<<<<< Updated upstream
-import CitasMascota from './pages/CitasMascota';
-import AgendarCita from './pages/AgendarCita';
-=======
 import HistorialClinico from './pages/HistorialClinico';
 import AgendarCita from './pages/AgendarCita';
 import CitasMascota from './pages/CitasMascota';
 import DailyAppointments from './pages/DailyAppointments';
->>>>>>> Stashed changes
 
 
 import './App.css'

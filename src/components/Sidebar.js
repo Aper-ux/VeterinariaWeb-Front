@@ -24,9 +24,6 @@ const Sidebar = () => {
     };
 
     return (
-<<<<<<< Updated upstream
-        <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
-=======
         <div>
             <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
                 {isOpen && (
@@ -72,7 +69,6 @@ const Sidebar = () => {
                     </div>
                 )}
             </div>
->>>>>>> Stashed changes
             <button className="toggle-button" onClick={() => setIsOpen(!isOpen)}>
                 {isOpen ? '-' : '+'}
             </button>
