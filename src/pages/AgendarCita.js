@@ -1,117 +1,129 @@
 import React, { useState, useEffect } from 'react';
-import { getAllClients, getPetsByClient, checkVetAvailability, createAppointment } from '../services/api';
-import { toast } from 'react-toastify';
+import { scheduleAppointment, getUsers, getClientPets } from '../services/api';
+
 import './AgendarCita.css';
 
 const AgendarCita = () => {
-    const [clientes, setClientes] = useState([]);
-    const [mascotas, setMascotas] = useState([]);
-    const [selectedClient, setSelectedClient] = useState('');
-    const [selectedPet, setSelectedPet] = useState('');
-    const [appointmentDate, setAppointmentDate] = useState('');
-    const [appointmentTime, setAppointmentTime] = useState('');
-    const [isAvailable, setIsAvailable] = useState(true);
+    const [appointmentData, setAppointmentData] = useState({
+        clientId: '',
+        veterinarianId: '',
+        appointmentDate: '',
+        reason: '',
+        notes: '',
+        petId: '',
+    });
+    const [clients, setClients] = useState([]);
+    const [veterinarians, setVeterinarians] = useState([]);
+    const [pets, setPets] = useState([]);
 
     useEffect(() => {
-        fetchClients();
+        fetchUsers(); // Cargar todos los usuarios al montar el componente
     }, []);
 
-    // Obtener la lista de clientes
-    const fetchClients = async () => {
+    const fetchUsers = async () => {
         try {
-            const response = await getAllClients();
-            setClientes(response);
+            const response = await getUsers();
+            const users = response.data.data;
+
+            // Filtrar usuarios según el rol
+            const filteredClients = users.filter(user => user.roles.includes('CLIENTE'));
+            const filteredVeterinarians = users.filter(user => user.roles.includes('VETERINARIO'));
+
+            setClients(filteredClients);
+            setVeterinarians(filteredVeterinarians);
         } catch (error) {
-            console.error('Error fetching clients:', error);
-            toast.error('Error al cargar los clientes');
+            console.error('Error al obtener usuarios:', error);
         }
     };
 
-    // Obtener las mascotas del cliente seleccionado
-    const fetchPets = async (clientId) => {
-        try {
-            const response = await getPetsByClient(clientId);
-            setMascotas(response);
-        } catch (error) {
-            console.error('Error fetching pets:', error);
-            toast.error('Error al cargar las mascotas');
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setAppointmentData({ ...appointmentData, [name]: value });
+    };
+
+    const handleClientChange = (e) => {
+        const clientNameOrEmail = e.target.value;
+        const selectedClient = clients.find(
+            client => client.nombre === clientNameOrEmail || client.email === clientNameOrEmail
+        );
+        if (selectedClient) {
+            setAppointmentData({ ...appointmentData, clientId: selectedClient.uid });
+            fetchPetsByClientId(selectedClient.uid);
         }
     };
 
-    // Comprobar disponibilidad del veterinario
-    const checkAvailability = async () => {
-        if (!appointmentDate || !appointmentTime) return;
-        try {
-            const available = await checkVetAvailability(appointmentDate, appointmentTime);
-            setIsAvailable(available);
-            if (!available) toast.error('El veterinario no está disponible en esta fecha y hora');
-        } catch (error) {
-            console.error('Error checking availability:', error);
-            toast.error('Error al verificar disponibilidad');
+    const handleVeterinarianChange = (e) => {
+        const vetNameOrEmail = e.target.value;
+        const selectedVet = veterinarians.find(
+            vet => vet.nombre === vetNameOrEmail || vet.email === vetNameOrEmail
+        );
+        if (selectedVet) {
+            setAppointmentData({ ...appointmentData, veterinarianId: selectedVet.uid });
         }
     };
 
-    // Agendar cita
-    const handleSchedule = async () => {
-        if (!selectedClient || !selectedPet || !appointmentDate || !appointmentTime) {
-            toast.error('Completa todos los campos obligatorios');
-            return;
+    const handlePetChange = (e) => {
+        const petName = e.target.value;
+        const selectedPet = pets.find(pet => pet.name === petName);
+        if (selectedPet) {
+            setAppointmentData({ ...appointmentData, petId: selectedPet.id });
         }
-        if (!isAvailable) {
-            toast.error('El veterinario no está disponible en la fecha y hora seleccionadas');
-            return;
-        }
+    };
+
+    const fetchPetsByClientId = async (clientId) => {
         try {
-            await createAppointment(selectedClient, selectedPet, appointmentDate, appointmentTime);
-            toast.success('Cita agendada exitosamente');
-            // Aquí podrías incluir código para enviar notificación
+            const response = await getClientPets(clientId); // Ajusta esta función en api.js si es necesario
+            setPets(response.data.data);
         } catch (error) {
-            console.error('Error scheduling appointment:', error);
-            toast.error('Error al agendar la cita');
+            console.error('Error al obtener mascotas del cliente:', error);
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await scheduleAppointment(appointmentData);
+            alert('Cita programada exitosamente');
+        } catch (error) {
+            console.error('Error al programar la cita:', error);
+            alert('Error al programar la cita');
         }
     };
 
     return (
-        <div className="agendar-cita-container">
-            <h2>Agendar Nueva Cita</h2>
-            <div className="form-group">
-                <label>Cliente:</label>
-                <select onChange={(e) => { setSelectedClient(e.target.value); fetchPets(e.target.value); }}>
-                    <option value="">Seleccionar Cliente</option>
-                    {clientes.map((cliente) => (
-                        <option key={cliente.id} value={cliente.id}>
-                            {cliente.nombre} {cliente.apellido}
-                        </option>
-                    ))}
-                </select>
+        <form onSubmit={handleSubmit}>
+            <div>
+                <label>Cliente (Nombre o Correo):</label>
+                <input type="text" name="clientNameOrEmail" onChange={handleClientChange} required />
             </div>
 
-            <div className="form-group">
-                <label>Mascota:</label>
-                <select onChange={(e) => setSelectedPet(e.target.value)}>
-                    <option value="">Seleccionar Mascota</option>
-                    {mascotas.map((mascota) => (
-                        <option key={mascota.id} value={mascota.id}>
-                            {mascota.nombre}
-                        </option>
-                    ))}
-                </select>
+            <div>
+                <label>Mascota (Nombre):</label>
+                <input type="text" name="petName" onChange={handlePetChange} required />
             </div>
 
-            <div className="form-group">
-                <label>Fecha de la Cita:</label>
-                <input type="date" value={appointmentDate} onChange={(e) => setAppointmentDate(e.target.value)} />
+            <div>
+                <label>Veterinario (Nombre o Correo):</label>
+                <input type="text" name="veterinarianNameOrEmail" onChange={handleVeterinarianChange} required />
             </div>
 
-            <div className="form-group">
-                <label>Hora de la Cita:</label>
-                <input type="time" value={appointmentTime} onChange={(e) => setAppointmentTime(e.target.value)} onBlur={checkAvailability} />
+            <div>
+                <label>Fecha y Hora:</label>
+                <input type="datetime-local" name="appointmentDate" onChange={handleChange} required />
             </div>
 
-            <button onClick={handleSchedule} className="button-schedule" disabled={!isAvailable}>
-                Agendar Cita
-            </button>
-        </div>
+            <div>
+                <label>Razón de la cita:</label>
+                <input type="text" name="reason" onChange={handleChange} required />
+            </div>
+
+            <div>
+                <label>Notas adicionales:</label>
+                <textarea name="notes" onChange={handleChange}></textarea>
+            </div>
+
+            <button type="submit">Agendar Cita</button>
+        </form>
     );
 };
 

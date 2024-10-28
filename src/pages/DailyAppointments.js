@@ -1,67 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import './DailyAppointments.css';
-import AppointmentDetailsModal from './AppointmentDetailsModal';
+import { getDailyAppointments } from '../services/api';
 
-const DailyAppointments = () => {
-  const [appointments, setAppointments] = useState([]);
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const DailyAppointments = ({ veterinarianId }) => {
+    const [appointments, setAppointments] = useState([]);
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const response = await axios.get('/api/appointments/daily', {
-          params: {
-            veterinarianId: 'ID_DEL_VETERINARIO'
-          }
-        });
-        const sortedAppointments = response.data.data.appointments.sort(
-          (a, b) => new Date(a.appointmentDate) - new Date(b.appointmentDate)
-        );
-        setAppointments(sortedAppointments);
-        setLoading(false);
-      } catch (err) {
-        setError('Error al cargar las citas');
-        setLoading(false);
-      }
+    useEffect(() => {
+        fetchDailyAppointments();
+    }, []);
+
+    const fetchDailyAppointments = async () => {
+        try {
+            const response = await getDailyAppointments(veterinarianId);
+            setAppointments(response.data.data);
+        } catch (error) {
+            console.error('Error al obtener citas diarias:', error);
+        }
     };
 
-    fetchAppointments();
-  }, []);
-
-  if (loading) {
-    return <div>Cargando citas...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  return (
-    <div className="appointments-container">
-      <h2>Citas del día</h2>
-      <ul>
-        {appointments.map((appointment) => (
-          <li key={appointment.id} className="appointment-item">
-            <div>Hora: {new Date(appointment.appointmentDate).toLocaleTimeString()}</div>
-            <div>Cliente: {appointment.client.nombre} {appointment.client.apellido}</div>
-            <div>Mascota: {appointment.pet.name}</div>
-            <div>Razón: {appointment.reason}</div>
-            <button onClick={() => setSelectedAppointment(appointment)}>Ver Detalles</button>
-          </li>
-        ))}
-      </ul>
-
-      {selectedAppointment && (
-        <AppointmentDetailsModal
-          appointment={selectedAppointment}
-          onClose={() => setSelectedAppointment(null)}
-        />
-      )}
-    </div>
-  );
+    return (
+        <div>
+            <h2>Citas del Día</h2>
+            {appointments.map((appointment) => (
+                <div key={appointment.id}>
+                    <p>Fecha: {new Date(appointment.appointmentDate).toLocaleString()}</p>
+                    <p>Razón: {appointment.reason}</p>
+                    <p>Cliente: {appointment.client.nombre}</p>
+                </div>
+            ))}
+        </div>
+    );
 };
 
 export default DailyAppointments;

@@ -39,19 +39,7 @@ axios.interceptors.response.use(
     }
 );
 
-export const getDailyAppointments = async (veterinarianId) => {
-    try {
-      const response = await axios.get(`${API_URL}/api/appointments/daily`, {
-        params: {
-          veterinarianId: veterinarianId
-        }
-      });
-      return response.data.data.appointments;
-    } catch (error) {
-      console.error('Error al obtener las citas diarias:', error);
-      throw error;
-    }
-  };
+
 // Función de login
 export const loginApi = (credentials) => {
     return axios.post(`${API_URL}/auth/login`, credentials);
@@ -184,19 +172,27 @@ export const toggleUserStatus = (userId, isActive) => {
     return axios.post(`${API_URL}/users/${userId}/toggle-status`, { isActive });
 };
 //inventario
-export const getInventoryItems = async () => {
+// En api.js
+export const getInventoryItems = async (page = 0, size = 10, sortBy = '', sortDirection = '', filterBy = '', filterValue = '') => {
     try {
-        const response = await axios.get(`${API_URL}/inventory`);
-        console.log('API Response:', response);  // Aquí ahora debe mostrar el array directamente
-        return response;  // Devuelve directamente el array de productos
+        const response = await axios.get( `${API_URL}/inventory`, {
+            params: {
+                page,
+                size,
+                sortBy,
+                sortDirection,
+                filterBy,
+                filterValue
+            }
+        });
+        
+        // Retorna solo el array `content` para ser usado en el frontend
+        return response.data.data.content; 
     } catch (error) {
-        console.error("Error fetching inventory items:", error);
+        console.error("Error fetching inventory:", error);
         throw error;
     }
 };
-
-
-
 
 export const addInventoryItem = async (data) => {
     return axios.post(`${API_URL}/inventory`, data);
@@ -248,6 +244,17 @@ export const createHistorial = (historialData) => {
     return axios.post(`${API_URL}/history`, historialData);
 };
 
+// En api.js
+export const getUsers = () => {
+    return axios.get(`${API_URL}/users`); // Ajusta el endpoint según tu backend para obtener todos los usuarios
+};
+
+// En api.js
+export const getClientPets = (clientId) => {
+    return axios.get(`${API_URL}/users/${clientId}/pets`); // Ajusta el endpoint según tu backend
+};
+
+
 export const updateHistorial = (historialId, historialData) => {
     return axios.put(`${API_URL}/history/${historialId}`, historialData);
 };
@@ -256,20 +263,37 @@ export const deleteHistorial = (historialId) => {
     return axios.delete(`${API_URL}/history/${historialId}`);
 };
 
+<<<<<<< Updated upstream
 // Obtener las citas del cliente autenticado
 export const getMyAppointments = async () => {
     const response = await axios.get('/api/appointments/my-pets');
     return response.data;
+=======
+
+// Endpoint para obtener citas diarias de un veterinario
+export const getDailyAppointments = (veterinarianId, date) => {
+    return axios.get(`${API_URL}/daily`, { params: { veterinarianId, date } });
+>>>>>>> Stashed changes
 };
 
-// Cancelar una cita
-export const cancelAppointment = async (appointmentId) => {
-    await axios.put(`/api/appointments/${appointmentId}/cancel`);
+// Endpoint para obtener citas de todas las mascotas de un cliente autenticado
+export const getClientPetsAppointments = (paginationRequest) => {
+    return axios.get(`${API_URL}/my-pets`, { params: paginationRequest });
 };
 
-// Reprogramar una cita
-export const rescheduleAppointment = async (appointmentId, newDate) => {
-    await axios.put(`/api/appointments/${appointmentId}/reschedule`, { newDate });
+// Endpoint para programar una cita
+export const scheduleAppointment = (appointmentData) => {
+    return axios.post(`${API_URL}/appointments/schedule`, appointmentData);
+};
+
+// Endpoint para reprogramar una cita
+export const rescheduleAppointment = (appointmentId, newDate) => {
+    return axios.post(`${API_URL}/${appointmentId}/reschedule`, { newDate });
+};
+
+// Endpoint para cancelar una cita
+export const cancelAppointment = (appointmentId) => {
+    return axios.post(`${API_URL}/${appointmentId}/cancel`);
 };
 
 // Obtener todos los clientes

@@ -30,6 +30,7 @@ const InventoryManager = () => {
                 setError("Error al cargar el inventario.");
             }
         };
+        
 
         fetchInventory();
     }, []);

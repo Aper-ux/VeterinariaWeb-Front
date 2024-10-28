@@ -6,22 +6,28 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import Sidebar from './components/Sidebar';
 import ReminderConfig from './pages/ReminderConfig';
-import TopBar from './components/TopBar';
+
 import LogIn from './pages/LogIn';
 import Register from './pages/Register';
 import AdminRegister from './pages/AdminRegister';
 import Clientes from './pages/Clientes';
 import Mascotas from './pages/Mascotas';
 import InventoryPage from './pages/InventoryPage';
-import DailyAppointments from './pages/DailyAppointments'; 
 import Roles from './components/Roles';
 import PerfilCliente from './pages/PerfilCliente';
 import MascotasVet from './pages/MascotasVet';
 import UserList from './components/UserList'
 import HistorialClinico from './pages/HistorialClinico';
 import HistorialClinicoRegistro from './pages/HistorialClinicoRegistro';
+<<<<<<< Updated upstream
 import CitasMascota from './pages/CitasMascota';
 import AgendarCita from './pages/AgendarCita';
+=======
+import HistorialClinico from './pages/HistorialClinico';
+import AgendarCita from './pages/AgendarCita';
+import CitasMascota from './pages/CitasMascota';
+import DailyAppointments from './pages/DailyAppointments';
+>>>>>>> Stashed changes
 
 
 import './App.css'
@@ -36,7 +42,7 @@ function AppContent() {
     return (
         <Router>
             <div className="App">
-                <TopBar />
+                
                 <Sidebar />
                 <div className="content">
                     <Switch>
@@ -48,9 +54,10 @@ function AppContent() {
                         </Route>
                         
                         
-
+                        <PrivateRoute path="/agendar-cita" component={AgendarCita} />
+                        <PrivateRoute path="/citas-mascota" component={CitasMascota} />
+                        <PrivateRoute path="/citas-diarias" component={DailyAppointments} />
                         <PrivateRoute path="/agendar-cita" component={AgendarCita} roles={['RECEPCIONISTA']} />
-                        <PrivateRoute path="/mis-citas" component={CitasMascota}/>
                         <PrivateRoute path="/registro-historial/:petId" component={HistorialClinicoRegistro} roles={['VETERINARIO']} />
                         <PrivateRoute path="/admin-register" component={AdminRegister} roles={['VETERINARIO']} />
                         <PrivateRoute path="/clientes" component={Clientes} roles={['VETERINARIO', 'RECEPCIONISTA']} />
@@ -63,9 +70,10 @@ function AppContent() {
                         <PrivateRoute path="/perfil" component={PerfilCliente} />
                         <PrivateRoute path="/daily-appointments" component={DailyAppointments} roles={['VETERINARIO']} />  {/* Nueva ruta */}
                         <PrivateRoute path="/configurar-recordatorio" component={ReminderConfig} roles={['VETERINARIO']} />
-                        <Route exact path="/">
-                            <Redirect to={user ? "/perfil" : "/login"} />
+                        <Route path="/login">
+                            {user ? <Redirect to="/perfil" /> : <LogIn />}
                         </Route>
+
                     </Switch>
                 </div>
                 <ToastContainer position="bottom-right" autoClose={3000} />
