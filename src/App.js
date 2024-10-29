@@ -6,7 +6,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import Sidebar from './components/Sidebar';
 import ReminderConfig from './pages/ReminderConfig';
-import TopBar from './components/TopBar';
+
 import LogIn from './pages/LogIn';
 import Register from './pages/Register';
 import AdminRegister from './pages/AdminRegister';
@@ -35,7 +35,7 @@ function AppContent() {
     return (
         <Router>
             <div className="App">
-                <TopBar />
+                
                 <Sidebar />
                 <div className="content">
                     <Switch>
