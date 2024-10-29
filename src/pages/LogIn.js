@@ -3,6 +3,9 @@ import { useHistory } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { loginApi } from '../services/api';
 import { toast } from 'react-toastify';
+import logo from '../img/logo.jpg';
+
+import './login.css';
 
 const LogIn = () => {
     const [email, setEmail] = useState('');
@@ -25,24 +28,27 @@ const LogIn = () => {
             console.error('Error en el inicio de sesión:', error);
             toast.error(error.message || 'Error en el inicio de sesión');
         }
-    }
+    };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit} className="LogInContainer">
-                <h1>Iniciar Sesión</h1>
-                <h2 htmlFor="email">Email:</h2>
-                <div className="InputContainer">
-                    <input className="input" type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                </div>
-                <h2 htmlFor="password">Contraseña:</h2>
-                <div className="InputContainer">
-                    <input className="input" type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </div>
-                <button className="button-56" type="submit">Ingresar</button>
-            </form>
+        <div className="login-container">
+            <div className="login-image">
+                <img src={logo} alt="Logo" className="login-logo" />
+            </div>
+            <div className="login-form">
+                <h1>🐾Iniciar Sesión</h1>
+                <form onSubmit={handleSubmit}>
+                    <label htmlFor="email">Email:</label>
+                    <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+
+                    <label htmlFor="password">Contraseña:</label>
+                    <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+
+                    <button type="submit">Ingresar</button>
+                </form>
+            </div>
         </div>
     );
-}
+};
 
 export default LogIn;

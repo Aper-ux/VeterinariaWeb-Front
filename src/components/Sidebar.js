@@ -29,7 +29,7 @@ const Sidebar = () => {
                 {isOpen && (
                     <div className="sidebar-content">
                         <div className="user-info">
-                            <h2>{user ? `${user.nombre} ${user.apellido}` : 'Invitado'}</h2>
+                            <h2>{user ? `${user.nombre} ${user.apellido}` : '🐾PurplePaw'}</h2>
                             <p>{user ? user.email : ''}</p>
                         </div>
                         <nav className="menu">
