@@ -6,7 +6,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import Sidebar from './components/Sidebar';
 import ReminderConfig from './pages/ReminderConfig';
-
+import VetDashboard from './pages/VetDashboard';
 import LogIn from './pages/LogIn';
 import Register from './pages/Register';
 import AdminRegister from './pages/AdminRegister';
@@ -47,7 +47,7 @@ function AppContent() {
                             {user ? <Redirect to="/perfil" /> : <Register />}
                         </Route>
                         
-                        
+                        <PrivateRoute path="/vet-dashboard" component={VetDashboard} roles={['VETERINARIO']} />
                         <PrivateRoute path="/agendar-cita" component={AgendarCita} />
                         <PrivateRoute path="/citas-mascota" component={CitasMascota} />
                         <PrivateRoute path="/citas-diarias" component={DailyAppointments} />

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Sidebar.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faPaw, faCalendarAlt, faClipboardList, faSignOutAlt, faThLarge } from '@fortawesome/free-solid-svg-icons';
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true);
@@ -36,30 +38,63 @@ const Sidebar = () => {
                             <ul>
                                 {user ? (
                                     <>
-                                        <li><button onClick={() => handleNavigation('/perfil')}>Mi Perfil</button></li>
-                                        <li><button onClick={() => handleNavigation('/mascotas')}>Mis Mascotas</button></li>
-                                        <li><button onClick={() => handleNavigation('/mis-citas')}>Mis Citas</button></li>
+                                        <li onClick={() => handleNavigation('/perfil')}>
+                                            <FontAwesomeIcon icon={faUser} className="icon" />
+                                            Mi Perfil
+                                        </li>
+                                        <li onClick={() => handleNavigation('/mascotas')}>
+                                            <FontAwesomeIcon icon={faPaw} className="icon" />
+                                            Mis Mascotas
+                                        </li>
+                                        <li onClick={() => handleNavigation('/mis-citas')}>
+                                            <FontAwesomeIcon icon={faCalendarAlt} className="icon" />
+                                            Mis Citas
+                                        </li>
+                                        
+                                        {hasRole(['VETERINARIO']) && (
+                                            <>
+                                                <li onClick={() => handleNavigation('/vet-dashboard')}>
+                                                    <FontAwesomeIcon icon={faThLarge} className="icon" />
+                                                    Dashboard Veterinario
+                                                </li>
+                                            </>
+                                        )}
                                         
                                         {hasRole(['VETERINARIO', 'RECEPCIONISTA']) && (
                                             <>
-                                                <li><button onClick={() => handleNavigation('/vetmascotas')}>Todas las Mascotas</button></li>
-                                                <li><button onClick={() => handleNavigation('/inventory')}>Inventario</button></li>
-                                                <li><button onClick={() => handleNavigation('/daily-appointments')}>Citas</button></li>
-                                                <li><button onClick={() => handleNavigation('/configurar-recordatorio')}>Configurar Recordatorio</button></li>
+                                                <li onClick={() => handleNavigation('/vetmascotas')}>
+                                                    <FontAwesomeIcon icon={faClipboardList} className="icon" />
+                                                    Todas las Mascotas
+                                                </li>
+                                                <li onClick={() => handleNavigation('/inventory')}>
+                                                    <FontAwesomeIcon icon={faClipboardList} className="icon" />
+                                                    Inventario
+                                                </li>
+                                                <li onClick={() => handleNavigation('/daily-appointments')}>
+                                                    <FontAwesomeIcon icon={faCalendarAlt} className="icon" />
+                                                    Citas
+                                                </li>
+                                                <li onClick={() => handleNavigation('/configurar-recordatorio')}>
+                                                    <FontAwesomeIcon icon={faCalendarAlt} className="icon" />
+                                                    Configurar Recordatorio
+                                                </li>
                                             </>
                                         )}
-                                        {hasRole(['VETERINARIO']) && (
-                                            <>
-                                                <li><button onClick={() => handleNavigation('/usuarios')}>Usuarios</button></li>
-                                                <li><button onClick={() => handleNavigation('/roles')}>Roles</button></li>
-                                            </>
-                                        )}
-                                        <li><button onClick={handleLogout} className="logout-button">Cerrar Sesión</button></li>
+                                        <li onClick={handleLogout} className="logout-button">
+                                            <FontAwesomeIcon icon={faSignOutAlt} className="icon" />
+                                            Cerrar Sesión
+                                        </li>
                                     </>
                                 ) : (
                                     <>
-                                        <li><button onClick={() => handleNavigation('/login')}>Iniciar Sesión</button></li>
-                                        <li><button onClick={() => handleNavigation('/register')}>Registrarse</button></li>
+                                        <li onClick={() => handleNavigation('/login')}>
+                                            <FontAwesomeIcon icon={faUser} className="icon" />
+                                            Iniciar Sesión
+                                        </li>
+                                        <li onClick={() => handleNavigation('/register')}>
+                                            <FontAwesomeIcon icon={faUser} className="icon" />
+                                            Registrarse
+                                        </li>
                                     </>
                                 )}
                             </ul>

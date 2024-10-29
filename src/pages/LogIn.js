@@ -19,7 +19,7 @@ const LogIn = () => {
             const response = await loginApi({ email, password });
             if (response && response.token && response.user) {
                 login(response.user, response.token);
-                history.push('/perfil');
+                history.push('/vet-dashboard');
                 toast.success('Inicio de sesión exitoso');
             } else {
                 toast.error('Respuesta de inicio de sesión inválida');

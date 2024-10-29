@@ -34,7 +34,7 @@ const Register = () => {
             if (loginResponse && loginResponse.token && loginResponse.user) {
                 login(loginResponse.user, loginResponse.token);
                 toast.success('Registro exitoso. Bienvenido!');
-                history.push('/perfil');
+                history.push('/vet-dashboard');
             } else {
                 throw new Error('Error en el inicio de sesión automático');
             }
