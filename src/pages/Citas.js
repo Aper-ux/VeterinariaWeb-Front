@@ -1,9 +1,8 @@
-// Citas accessibles por el veterinario y recepcionista
-
 import React, { useState, useEffect } from 'react';
-import { getAllCitas, createCita, updateCita, deleteCita } from '../services/api'; // Importa la nueva función
+import { getAllCitas, createCita, updateCita, deleteCita } from '../services/api';
 import CitasModal from '../components/CitasModal';
 import { toast } from 'react-toastify';
+import './Citas.css'; // Importa el archivo CSS
 
 const Citas = () => {
     const [citas, setCitas] = useState([]);
@@ -12,13 +11,13 @@ const Citas = () => {
     const [isAdding, setIsAdding] = useState(false);
 
     useEffect(() => {
-        fetchCitas();  // Cambiamos la llamada a la nueva función
+        fetchCitas();
     }, []);
 
     const fetchCitas = async () => {
         try {
-            const response = await getAllCitas();  // Llamada a getAllCitas() en lugar de getCurrentUserCitas()
-            setCitas(response);  // Actualizamos el estado con las citas obtenidas
+            const response = await getAllCitas();
+            setCitas(response);
         } catch (error) {
             console.error('Error fetching citas:', error);
             toast.error('Error al cargar las citas');
@@ -76,13 +75,13 @@ const Citas = () => {
                         <th>Fecha</th>
                         <th>Mascota</th>
                         <th>Dueño</th>
-                        <th>Veterinario</th> {/* Veterinario asignado a la cita */}
+                        <th>Veterinario</th>
                         <th>Motivo de cita</th>
-                        <th>Estado</th> {/* Pendiente, confirmada, cancelada */}
-                        <th>Observaciones</th> {/* Anotaciones */}
-                        <th>Tipo de cita</th> {/* Consulta, vacunación, cirugía, etc. */}
+                        <th>Estado</th>
+                        <th>Observaciones</th>
+                        <th>Tipo de cita</th>
                         <th>Costo estimado</th>
-                        <th>Metodo de pago</th>
+                        <th>Método de pago</th>
                         <th>Recordatorio de cita</th>
                         <th>Acciones</th>
                     </tr>
