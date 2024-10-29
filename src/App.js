@@ -38,7 +38,7 @@ function AppContent() {
         <Router>
             <div className="App">
                 <Sidebar />
-                <div className="content">
+                <div className="main-content">
                     <Switch>
                         <Route path="/login">
                             {user ? <Redirect to="/perfil" /> : <LogIn />}

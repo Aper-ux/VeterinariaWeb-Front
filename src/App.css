@@ -3,7 +3,10 @@
 .App {
   text-align: center;
   color: #282c34;
-  font-family: Lexend;
+  font-family: 'Lexend', sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .App-logo {
@@ -43,12 +46,27 @@
 
 /* Ajuste del contenido principal para que no se superponga con el sidebar */
 .content {
-  margin-left: 250px;
+  margin-left: 300px; /* Asegúrate de que coincide con el ancho del sidebar */
   padding: 20px;
   transition: margin-left 0.3s ease;
+  min-height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
+
+/* Añade un margen superior a todo el contenido para evitar que se superponga en la parte superior */
+.main-content {
+  margin-top: 60px; /* Ajusta este valor según el espacio que necesites */
+  padding: 20px;
+  box-sizing: border-box;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
 
 /* Cuando el sidebar está cerrado */
 .sidebar.closed + .content {
   margin-left: 0;
+  padding: 20px; /* Asegura que el contenido no esté pegado al borde */
 }
